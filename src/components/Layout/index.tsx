@@ -7,7 +7,6 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Avatar from "./Avatar";
 import logo from "../../assets/react.svg";
 import styles from "@/styles/layout.module.scss";
-import React from "react";
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 
@@ -27,7 +26,7 @@ const Layout: FC<Props> = ({ menuItems }) => {
   const location = useLocation();
 
   return (
-    <AntdLayout>
+    <AntdLayout className={styles.layout}>
       <Sider
         className={styles.sider}
         collapsed={collapsed}
@@ -70,10 +69,7 @@ const Layout: FC<Props> = ({ menuItems }) => {
           </div>
         </Header>
 
-        <Content
-          style={{ margin: "24px 16px 0", overflow: "initial" }}
-          className={styles.content}
-        >
+        <Content className={styles.content}>
           <Breadcrumb className={styles.bread}>
             <Breadcrumb.Item>sample</Breadcrumb.Item>
             <Breadcrumb.Item>sample</Breadcrumb.Item>
@@ -86,22 +82,12 @@ const Layout: FC<Props> = ({ menuItems }) => {
               background: colorBgContainer,
             }}
           >
-            <div style={{ padding: 24, textAlign: "center", background: colorBgContainer }}>
-              <p>long content</p>
-              {
-                // indicates very long content
-                Array.from({ length: 100 }, (_, index) => (
-                  <React.Fragment key={index}>
-                    {index % 20 === 0 && index ? "more" : "..."}
-                    <br />
-                  </React.Fragment>
-                ))
-              }
-            </div>
             <Outlet />
           </div>
         </Content>
-        <Footer className={styles.footer}>Ant Design ©2023 Created by Ant UED</Footer>
+        <Footer className={styles.footer}>
+          <div>Ant Design ©2023 Created by Ant UED</div>
+        </Footer>
       </AntdLayout>
     </AntdLayout>
   );

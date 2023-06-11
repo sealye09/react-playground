@@ -42,7 +42,7 @@ const Avatar: React.FC<Props> = ({ avatarSrc }) => {
   return (
     <Dropdown
       menu={{ items }}
-      placement="bottom"
+      placement="bottomRight"
       arrow
     >
       <AntdAvatar

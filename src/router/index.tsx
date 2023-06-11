@@ -17,47 +17,47 @@ export type RouteType = {
 const routes: RouteType[] = [
   {
     label: "看板",
-    key: "/admin/dashboard",
+    key: "/dashboard",
     element: <Dashboard />,
     icon: <DashboardOutlined />,
   },
   {
     label: "药品管理",
-    key: "/admin/medicine",
+    key: "/medicine",
     icon: <HeartOutlined />,
     children: [
       {
         label: "药品分类",
-        key: "/admin/medicine/category",
+        key: "/medicine/category",
         element: <MedicineCatgory />,
       },
       {
         label: "药品信息",
-        key: "/admin/medicine/info",
+        key: "/medicine/info",
         element: <MedicineInfo />,
       },
     ],
   },
   {
     label: "文章管理",
-    key: "/admin/article",
+    key: "/article",
     icon: <FileOutlined />,
     children: [
       {
         label: "文章分类",
-        key: "/admin/article/category",
+        key: "/article/category",
         element: <ArticleCatgory />,
       },
       {
         label: "文章信息",
-        key: "/admin/article/info",
+        key: "/article/info",
         element: <ArticleInfo />,
       },
     ],
   },
   {
     label: "会员管理",
-    key: "/admin/user",
+    key: "/user",
     icon: <UserOutlined />,
     element: <UserList />,
   },
