@@ -1,6 +1,6 @@
 import React from "react";
-import { Avatar as AntdAvatar, Dropdown, MenuProps } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { Avatar as AntdAvatar, Dropdown, MenuProps } from "antd";
 import { clearToken } from "../../utils/tools";
 
 interface Props {

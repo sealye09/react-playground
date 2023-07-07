@@ -1,8 +1,8 @@
-import React from 'react';
+import { FC } from "react";
 
 interface Props {}
 
-const MedicineCatgory = (props: Props) => {
+const MedicineCatgory: FC<Props> = (props: Props) => {
   return <div>MedicineCatgory</div>;
 };
 

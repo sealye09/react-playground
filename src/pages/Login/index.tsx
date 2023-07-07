@@ -1,32 +1,32 @@
 import { FC } from "react";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message } from "antd";
-import { loginAPI } from "../../services/auth";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../../utils/tools";
+import { Button, Form, Input, message } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
 import styles from "@/styles/login.module.scss";
 
-const Login: FC = () => {
+interface Props {}
+
+const Login: FC<Props> = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
     console.log("login...");
-    const res = await loginAPI({ ...values });
-    if (res.success) {
-      setToken(res.data);
-      messageApi.open({
-        type: "success",
-        content: "登入成功",
-      });
-      navigate("/admin/dashboard");
-    } else {
-      messageApi.open({
-        type: "error",
-        content: `${res.errorMessage}`,
-      });
-    }
+    // const res = await loginAPI({ ...values });
+    // if (res.success) {
+    //   setToken(res.data);
+    //   messageApi.open({
+    //     type: "success",
+    //     content: "登入成功",
+    //   });
+    //   navigate("/admin/dashboard");
+    // } else {
+    //   messageApi.open({
+    //     type: "error",
+    //     content: `${res.errorMessage}`,
+    //   });
+    // }
   };
 
   return (

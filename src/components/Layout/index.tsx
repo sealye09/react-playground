@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
-import { Breadcrumb, Button, Layout as AntdLayout, Menu, theme } from "antd";
-import { RouteType } from "../AppProvider";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Breadcrumb, Button, Layout as AntdLayout, Menu, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
+import { RouteType } from "../AppProvider";
 import Avatar from "./Avatar";
 import logo from "../../assets/react.svg";
 import styles from "@/styles/layout.module.scss";

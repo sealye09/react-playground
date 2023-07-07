@@ -1,8 +1,9 @@
 import Layout from "./components/Layout";
 import { Navigate, Route, Routes } from "react-router-dom";
+
 import { getMenus, getRoutes } from "./components/AppProvider";
-import Login from "./pages/Login";
 import { getToken } from "./utils/tools";
+import Login from "./pages/Login";
 
 function App() {
   return (

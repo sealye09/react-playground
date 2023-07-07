@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ConfigProvider } from "antd";
@@ -7,12 +8,14 @@ import App from "./App.tsx";
 import "@/styles/index.scss";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <Router>
-    <ConfigProvider
-      locale={zh_CN}
-      csp={{ nonce: "YourNonceCode" }}
-    >
-      <App />
-    </ConfigProvider>
-  </Router>,
+  <StrictMode>
+    <Router>
+      <ConfigProvider
+        locale={zh_CN}
+        csp={{ nonce: "YourNonceCode" }}
+      >
+        <App />
+      </ConfigProvider>
+    </Router>
+  </StrictMode>,
 );
