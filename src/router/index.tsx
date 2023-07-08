@@ -1,10 +1,18 @@
-import { DashboardOutlined, HeartOutlined, FileOutlined, UserOutlined } from "@ant-design/icons";
-import Dashboard from "../pages/Dashboard";
-import UserList from "../pages/UserList";
-import ArticleCatgory from "../pages/ArticleCatgory";
-import ArticleInfo from "../pages/ArticleInfo";
-import MedicineCatgory from "../pages/MedicineCatgory";
-import MedicineInfo from "../pages/MedicineInfo";
+import {
+  DashboardOutlined,
+  HeartOutlined,
+  FileOutlined,
+  UserOutlined,
+  MessageOutlined,
+} from "@ant-design/icons";
+
+import Dashboard from "@/pages/Dashboard";
+import UserList from "@/pages/UserList";
+import ArticleCatgory from "@/pages/ArticleCatgory";
+import ArticleInfo from "@/pages/ArticleInfo";
+import MedicineCatgory from "@/pages/MedicineCatgory";
+import MedicineInfo from "@/pages/MedicineInfo";
+import MessagePage from "@/pages/Message";
 
 export type RouteType = {
   label: string;
@@ -17,49 +25,55 @@ export type RouteType = {
 const routes: RouteType[] = [
   {
     label: "看板",
-    key: "/dashboard",
+    key: "/admin/dashboard",
     element: <Dashboard />,
     icon: <DashboardOutlined />,
   },
   {
     label: "药品管理",
-    key: "/medicine",
+    key: "/admin/medicine",
     icon: <HeartOutlined />,
     children: [
       {
         label: "药品分类",
-        key: "/medicine/category",
+        key: "/admin/medicine/category",
         element: <MedicineCatgory />,
       },
       {
         label: "药品信息",
-        key: "/medicine/info",
+        key: "/admin/medicine/info",
         element: <MedicineInfo />,
       },
     ],
   },
   {
     label: "文章管理",
-    key: "/article",
+    key: "/admin/article",
     icon: <FileOutlined />,
     children: [
       {
         label: "文章分类",
-        key: "/article/category",
+        key: "/admin/article/category",
         element: <ArticleCatgory />,
       },
       {
         label: "文章信息",
-        key: "/article/info",
+        key: "/admin/article/info",
         element: <ArticleInfo />,
       },
     ],
   },
   {
     label: "会员管理",
-    key: "/user",
+    key: "/admin/user",
     icon: <UserOutlined />,
     element: <UserList />,
+  },
+  {
+    label: "消息",
+    key: "/admin/message",
+    icon: <MessageOutlined />,
+    element: <MessagePage />,
   },
 ];
 

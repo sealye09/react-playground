@@ -1,13 +1,14 @@
 import Layout from "./components/Layout";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { getMenus, getRoutes } from "./components/AppProvider";
+import { getMenus, getRoutes } from "@/router/index";
 import { getToken } from "./utils/tools";
 import Login from "./pages/Login";
+import { ToastContainer, ToastProvider } from "./components/Toast";
 
 function App() {
   return (
-    <>
+    <ToastProvider>
       {getToken() ? <></> : <></>}
       <Routes>
         <Route
@@ -45,7 +46,9 @@ function App() {
           element={<h2>404</h2>}
         />
       </Routes>
-    </>
+
+      <ToastContainer  />
+    </ToastProvider>
   );
 }
 
