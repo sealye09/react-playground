@@ -33,7 +33,10 @@ const Toast: FC<ToastProps> = ({ id, message, type, duration }) => {
   }, []);
 
   return (
-    <div className="flex justify-between gap-2 px-4 py-2 bg-red-200 rounded-md shadow-lg min-w-fit">
+    <div
+      key={id}
+      className="flex justify-between gap-2 px-4 py-2 bg-red-200 rounded-md shadow-lg min-w-fit"
+    >
       <div className="w-6 h-6 flex justify-center items-center">
         <Icon
           icon="heroicons:information-circle"
@@ -41,16 +44,13 @@ const Toast: FC<ToastProps> = ({ id, message, type, duration }) => {
         />
       </div>
       <div className="body flex flex-1 flex-col mx-4">
-        <span className="message">{message}</span>
+        <span className="message text-sm">{message}</span>
       </div>
       <div
-        className="w-6 h-6 flex justify-center items-center"
+        className="w-5 h-5 p-1 hover:bg-red-500 rounded-md flex justify-center items-center translate-x-4 -translate-y-1.5"
         onClick={() => onDismiss(id)}
       >
-        <Icon
-          icon="heroicons:x-mark"
-          fontSize={24}
-        />
+        <Icon icon="heroicons:x-mark" />
       </div>
     </div>
   );

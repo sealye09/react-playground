@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function useFetch(url: string, params?: any) {
+export const useFetch = (url: string, params?: any) => {
   const [data, setData] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +28,4 @@ function useFetch(url: string, params?: any) {
     data,
     isLoading,
   };
-}
-
-export default useFetch;
+};
