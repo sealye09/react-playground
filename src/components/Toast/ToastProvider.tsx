@@ -1,6 +1,14 @@
 import { FC, createContext, useReducer } from "react";
 
-type ToastActionType = "ADD_TOAST" | "DELETE_TOAST";
+export type ToastActionType = "ADD_TOAST" | "DELETE_TOAST";
+export type ToastType = "success" | "error" | "warning" | "info";
+export type ToastPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 
 interface IToastAction {
   type: ToastActionType;
@@ -10,7 +18,7 @@ interface IToastAction {
 export interface IToast {
   id: string;
   message: string;
-  type: "success" | "error" | "warning" | "info";
+  type: ToastType;
   duration?: number;
 }
 

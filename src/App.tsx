@@ -47,7 +47,7 @@ function App() {
         />
       </Routes>
 
-      <ToastContainer  />
+      <ToastContainer />
     </ToastProvider>
   );
 }

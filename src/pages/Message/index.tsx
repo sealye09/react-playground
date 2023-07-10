@@ -69,13 +69,13 @@ const MessagePage: FC<MessagePageProps> = ({}) => {
         </Button>
         <Button
           className="bg-red-500"
-          onClick={handleWarning}
+          onClick={handleError}
         >
           Errror
         </Button>
         <Button
           className="bg-yellow-500"
-          onClick={handleError}
+          onClick={handleWarning}
         >
           Warn
         </Button>

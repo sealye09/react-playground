@@ -1,20 +1,17 @@
 import { FC, useContext } from "react";
-import { ToastContext } from ".";
+import { ToastContext, ToastPosition } from ".";
 import Toast from "./Toast";
 
 interface ToastContainerProps {
-  position?:
-    | "top-left"
-    | "top-center"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-center"
-    | "bottom-right";
+  position?: ToastPosition;
   duration?: number;
 }
 
-export const ToastContainer: FC<ToastContainerProps> = ({ duration, position }) => {
-  const { state, dispatch } = useContext(ToastContext);
+export const ToastContainer: FC<ToastContainerProps> = ({
+  duration = 3000,
+  position = "top-center",
+}) => {
+  const { state } = useContext(ToastContext);
   return (
     <div className="absolute top-4 z-50 left-1/2 -translate-x-1/2 flex flex-col gap-4">
       {!!state &&
