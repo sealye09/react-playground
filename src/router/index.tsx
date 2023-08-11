@@ -4,15 +4,17 @@ import {
   FileOutlined,
   UserOutlined,
   MessageOutlined,
+  FallOutlined,
 } from "@ant-design/icons";
 
 import Dashboard from "@/pages/Dashboard";
-import UserList from "@/pages/UserList";
+import Masonry from "@/pages/Masonry";
 import ArticleCatgory from "@/pages/ArticleCatgory";
 import ArticleInfo from "@/pages/ArticleInfo";
 import MedicineCatgory from "@/pages/MedicineCatgory";
 import MedicineInfo from "@/pages/MedicineInfo";
 import MessagePage from "@/pages/Message";
+import WaterFallPage from "@/pages/WaterFallPage";
 
 export type RouteType = {
   label: string;
@@ -63,17 +65,25 @@ const routes: RouteType[] = [
       },
     ],
   },
-  {
-    label: "会员管理",
-    key: "/admin/user",
-    icon: <UserOutlined />,
-    element: <UserList />,
-  },
+
   {
     label: "消息",
     key: "/admin/message",
     icon: <MessageOutlined />,
     element: <MessagePage />,
+  },
+  {
+    label: "Flex瀑布流",
+    key: "/admin/flexwaterfall",
+    icon: <UserOutlined />,
+    element: <Masonry />,
+  },
+
+  {
+    label: "瀑布流",
+    key: "/admin/waterfall",
+    icon: <FallOutlined />,
+    element: <WaterFallPage />,
   },
 ];
 
