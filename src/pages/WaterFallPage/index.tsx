@@ -18,14 +18,14 @@ const WaterFallPage: FC = () => {
 
   const handleScroll = useThrottle(() => {
     if (!containerRef.current) return;
-    // 监听滚动事件，到达底部时加载更多
+
     const container = containerRef.current as HTMLDivElement;
     const containerHeight = container.clientHeight;
     const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
 
-    if (scrollTop + containerHeight >= scrollHeight) {
-      setPage(page + 1);
+    if (scrollTop / containerHeight >= 0.9) {
+      console.log("scrollTop / containerHeight:", scrollTop / containerHeight);
+      setPage((prev) => prev + 1);
     }
   }, 1000);
 
@@ -68,7 +68,9 @@ const WaterFallPage: FC = () => {
     };
   }, []);
 
-  const getData = useThrottle(async () => {
+  const getData = async () => {
+    console.log("load data");
+
     axios
       .get("https://www.vilipix.com/api/v1/picture/public", {
         params: {
@@ -82,7 +84,7 @@ const WaterFallPage: FC = () => {
       .then((res) => {
         setList(list.concat(res.data.data.rows));
       });
-  }, 1000);
+  };
 
   useEffect(() => {
     getData();
@@ -106,7 +108,6 @@ const WaterFallPage: FC = () => {
             cover={
               <img
                 onLoad={() => {
-                  console.log("img loaded");
                   handleResize();
                 }}
                 className="border"
