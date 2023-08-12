@@ -2,8 +2,8 @@ import { FC } from "react";
 
 interface Props {}
 
-const Dashboard: FC<Props> = ({}) => {
+const VirtualList: FC<Props> = ({}) => {
   return <div></div>;
 };
 
-export default Dashboard;
+export default VirtualList;

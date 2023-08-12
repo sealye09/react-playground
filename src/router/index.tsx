@@ -7,7 +7,7 @@ import {
   FallOutlined,
 } from "@ant-design/icons";
 
-import Dashboard from "@/pages/Dashboard";
+import VirtualList from "@/pages/VirtualList";
 import Masonry from "@/pages/Masonry";
 import ArticleCatgory from "@/pages/ArticleCatgory";
 import ArticleInfo from "@/pages/ArticleInfo";
@@ -26,9 +26,9 @@ export type RouteType = {
 
 const routes: RouteType[] = [
   {
-    label: "看板",
-    key: "/admin/dashboard",
-    element: <Dashboard />,
+    label: "虚拟列表",
+    key: "/admin/virtualList",
+    element: <VirtualList />,
     icon: <DashboardOutlined />,
   },
   {
