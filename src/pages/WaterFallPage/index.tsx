@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import axios from "axios";
 import { Card } from "antd";
-import Meta from "antd/es/card/Meta";
 
 import { MasonryItem, Masonry } from "@/components/Masonry/Masonry";
 import SImage from "@/components/Image";
@@ -62,7 +61,7 @@ const WaterFallPage: FC = () => {
               />
             }
           >
-            <Meta title={item.title + " " + idx} />
+            <span>{item.title + " " + idx}</span>
           </Card>
         </MasonryItem>
       ))}

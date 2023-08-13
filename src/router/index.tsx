@@ -7,7 +7,7 @@ import {
   FallOutlined,
 } from "@ant-design/icons";
 
-import VirtualList from "@/pages/VirtualList";
+import VirtualListPage from "@/pages/VirtualList";
 import Masonry from "@/pages/Masonry";
 import ArticleCatgory from "@/pages/ArticleCatgory";
 import ArticleInfo from "@/pages/ArticleInfo";
@@ -28,7 +28,7 @@ const routes: RouteType[] = [
   {
     label: "虚拟列表",
     key: "/admin/virtualList",
-    element: <VirtualList />,
+    element: <VirtualListPage />,
     icon: <DashboardOutlined />,
   },
   {

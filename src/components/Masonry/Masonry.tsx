@@ -17,7 +17,7 @@ export const MasonryItem: FC<MasonryItemProps> = ({
 }) => {
   return (
     <div
-      className={twMerge("absolute transition-all duration-300", className)}
+      className={twMerge("absolute transition-all duration-300 top-[9999px]", className)}
       style={{
         height,
         width,
