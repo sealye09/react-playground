@@ -5,11 +5,19 @@ import { Card } from "antd";
 import { MasonryItem, Masonry } from "@/components/Masonry/Masonry";
 import SImage from "@/components/Image";
 
+export interface IItem {
+  id: string;
+  title: string;
+  url: string;
+  height: number;
+  width: number;
+}
+
 const WaterFallPage: FC = () => {
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<IItem[]>([]);
   const [page, setPage] = useState(1); // 页码
 
-  const columns = 4; // 列数
+  const columns = 5; // 列数
   const gapX = 30; // 水平间距
   const gapY = 20; // 垂直间距
 
@@ -29,7 +37,20 @@ const WaterFallPage: FC = () => {
         },
       })
       .then((res) => {
-        setList(list.concat(res.data.data.rows));
+        console.log(res);
+        setList(
+          list.concat(
+            res.data.data.rows.map((item: any) => {
+              return {
+                id: item.picture_id,
+                title: item.title,
+                url: item.regular_url,
+                height: item.height,
+                width: item.width,
+              };
+            })
+          )
+        );
       });
   };
 
@@ -49,6 +70,7 @@ const WaterFallPage: FC = () => {
       onScrollEnd={() => {
         setPage((page) => page + 1);
       }}
+      items={list}
     >
       {list.map((item, idx) => (
         <MasonryItem key={idx}>
@@ -56,8 +78,8 @@ const WaterFallPage: FC = () => {
             hoverable
             cover={
               <SImage
-                className="border"
-                src={item.regular_url}
+                className="border w-full h-full"
+                src={item.url}
               />
             }
           >
