@@ -1,5 +1,5 @@
+import { FC, useRef, useState } from "react";
 import { useThrottle } from "@/hooks/useThrottle";
-import { FC, useEffect, useRef, useState } from "react";
 
 interface FixedListProps {
   items: any[];
@@ -35,31 +35,31 @@ const FixedList: FC<FixedListProps> = ({
   const containerStyle = {
     width: `${containerWidth}px`,
     height: `${containerHeight}px`,
-    overflow: "auto",
+    overflow: "hidden auto",
   };
 
   const contentStyle = {
+    width: "100%",
     height: `${itemHeight * (items.length - startIdx)}px`,
     transform: `translateY(${startIdx * itemHeight}px)`,
   };
 
   const itemStyle = {
+    width: "100%",
     height: `${itemHeight}px`,
   };
 
   const handleScroll = useThrottle(() => {
     if (!containerRef.current) return;
 
-    const container = containerRef.current;
-    const offset = container.scrollTop;
-    setScrollTop(offset);
-  }, 500);
+    const { clientHeight, scrollHeight, scrollTop } = containerRef.current;
+    console.log("clientHeight, scrollHeight, scrollTop:", clientHeight, scrollHeight, scrollTop);
+    setScrollTop(scrollTop);
 
-  useEffect(() => {
-    if (endIdx === items.length) {
+    if (scrollHeight - clientHeight - scrollTop < 10) {
       onScrollEnd && onScrollEnd();
     }
-  }, [endIdx, items.length, onScrollEnd]);
+  }, 500);
 
   return (
     <div
@@ -72,9 +72,10 @@ const FixedList: FC<FixedListProps> = ({
           return (
             <div
               key={item.id}
+              className="flex items-center border-b border-gray-300 hover:bg-gray-300/80 transition-all even:bg-gray-100"
               style={itemStyle}
             >
-              {item.name}
+              <span className="w-full line-clamp-2">{item.name}</span>
             </div>
           );
         })}
