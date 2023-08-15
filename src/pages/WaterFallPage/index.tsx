@@ -16,6 +16,7 @@ export interface IItem {
 const WaterFallPage: FC = () => {
   const [list, setList] = useState<IItem[]>([]);
   const [page, setPage] = useState(1); // 页码
+  const [loading, setLoading] = useState(false); // 加载状态
 
   const columns = 5; // 列数
   const gapX = 30; // 水平间距
@@ -59,7 +60,7 @@ const WaterFallPage: FC = () => {
   }, [page]);
 
   if (!list || !list.length) {
-    return <div>loading...</div>;
+    return null;
   }
 
   return (
@@ -76,10 +77,14 @@ const WaterFallPage: FC = () => {
         <MasonryItem key={idx}>
           <Card
             hoverable
+            loading={loading}
             cover={
               <SImage
                 className="border w-full h-full"
                 src={item.url}
+                onLoad={() => {
+                  setLoading(false);
+                }}
               />
             }
           >
