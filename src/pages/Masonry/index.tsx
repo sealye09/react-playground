@@ -23,7 +23,10 @@ const Masonry: FC = () => {
   const [loading, setLoading] = useState(false); // 加载状态
 
   const columns = 4; // 列数
-  const limit = 30; // 每页条数
+  const limit = 20; // 每页条数
+
+  const gapX = 20; // 水平间距
+  const gapY = 20; // 垂直间距
 
   const handleScroll = useThrottle(() => {
     if (!containerRef.current) return;
@@ -32,8 +35,7 @@ const Masonry: FC = () => {
     const containerHeight = container.clientHeight;
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
-
-    if (scrollTop + containerHeight >= scrollHeight) {
+    if (scrollHeight - scrollTop - containerHeight < 20) {
       setPage((page) => page + 1);
     }
   }, 1000);
@@ -54,7 +56,7 @@ const Masonry: FC = () => {
           list.concat(
             res.data.data.rows.map((item: any, idx: number) => {
               return {
-                id: idx + list.length + 1,
+                id: idx + list.length,
                 title: item.title,
                 url: item.regular_url,
                 height: item.height,
@@ -79,23 +81,26 @@ const Masonry: FC = () => {
 
   // 更新列数据，追加到最短列
   useEffect(() => {
-    if (!heights.length || !colData.length) return;
+    if (!containerRef.current || !heights.length || !colData.length) return;
+    const container = containerRef.current as HTMLDivElement;
+    const children = Array.from(container.children) as HTMLElement[];
 
+    const colWidth = children[0].clientWidth;
     const currHeights = [...heights];
-    const colDataLength = colData.length * colData[0].length;
+    const currColData = [...colData];
+    const colDataLength = currColData.length * currColData[0].length;
 
     for (let i = colDataLength; i < list.length; i++) {
       const minHeight = Math.min(...currHeights);
       const idx = currHeights.indexOf(minHeight);
-      colData[idx] = [...colData[idx], list[i]];
-
-      const height = (list[i].height / list[i].width) * 1000;
+      currColData[idx] = [...currColData[idx], list[i]];
+      const height = colWidth / (list[i].width / list[i].height);
       currHeights[idx] += height;
     }
 
-    setColData(colData);
+    setColData(currColData);
     setHeights(currHeights);
-  }, [list.length]);
+  }, [list.length, containerRef.current]);
 
   useEffect(() => {
     getData();
@@ -104,12 +109,18 @@ const Masonry: FC = () => {
   return (
     <div
       ref={containerRef}
-      className="masonry min-h-screen mx-auto flex w-full gap-4 h-full"
+      className="masonry min-h-screen mx-auto flex w-full h-full"
+      style={{
+        gap: `${gapX}px`,
+      }}
     >
       {colData.map((col, idx) => (
         <div
           key={idx}
-          className="masonry-col flex flex-col w-full gap-10"
+          className="masonry-col flex flex-col w-full"
+          style={{
+            gap: `${gapY}px`,
+          }}
         >
           {col.map((item, index) => (
             <Card
