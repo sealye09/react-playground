@@ -3,19 +3,27 @@ import axios from "axios";
 import { Card } from "antd";
 
 import { useThrottle } from "@/hooks/useThrottle";
+import SImage from "@/components/Image";
+
+interface IItem {
+  id: string;
+  title: string;
+  url: string;
+  height: number;
+  width: number;
+}
 
 const Masonry: FC = () => {
-  const [list, setList] = useState<any[]>([]);
-  const [page, setPage] = useState(1); // 页码
-
   const containerRef = useRef(null);
+
+  const [list, setList] = useState<IItem[]>([]);
+  const [colData, setColData] = useState<IItem[][]>([]); // 列数据
+  const [heights, setHeights] = useState<number[]>([]); // 每列高度
+  const [page, setPage] = useState(1); // 页码
+  const [loading, setLoading] = useState(false); // 加载状态
+
   const columns = 4; // 列数
-
   const limit = 30; // 每页条数
-
-  const colData = new Array(columns).fill([]).map((_, idx) => {
-    return list.filter((_, i) => i % columns === idx);
-  }); // 每列数据
 
   const handleScroll = useThrottle(() => {
     if (!containerRef.current) return;
@@ -26,16 +34,9 @@ const Masonry: FC = () => {
     const scrollHeight = document.documentElement.scrollHeight;
 
     if (scrollTop + containerHeight >= scrollHeight) {
-      setPage(page + 1);
+      setPage((page) => page + 1);
     }
   }, 1000);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   const getData = useThrottle(async () => {
     axios
@@ -49,22 +50,61 @@ const Masonry: FC = () => {
         },
       })
       .then((res) => {
-        setList(list.concat(res.data.data.rows));
+        setList(
+          list.concat(
+            res.data.data.rows.map((item: any, idx: number) => {
+              return {
+                id: idx + list.length + 1,
+                title: item.title,
+                url: item.regular_url,
+                height: item.height,
+                width: item.width,
+              };
+            })
+          )
+        );
       });
   }, 1000);
+
+  // 初始化
+  useEffect(() => {
+    setColData(new Array(columns).fill([]));
+    setHeights(new Array(columns).fill(0));
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // 更新列数据，追加到最短列
+  useEffect(() => {
+    if (!heights.length || !colData.length) return;
+
+    const currHeights = [...heights];
+    const colDataLength = colData.length * colData[0].length;
+
+    for (let i = colDataLength; i < list.length; i++) {
+      const minHeight = Math.min(...currHeights);
+      const idx = currHeights.indexOf(minHeight);
+      colData[idx] = [...colData[idx], list[i]];
+
+      const height = (list[i].height / list[i].width) * 1000;
+      currHeights[idx] += height;
+    }
+
+    setColData(colData);
+    setHeights(currHeights);
+  }, [list.length]);
 
   useEffect(() => {
     getData();
   }, [page, limit]);
 
-  if (!list || !list.length) {
-    return <div>loading...</div>;
-  }
-
   return (
     <div
       ref={containerRef}
-      className="masonry min-h-screen h-[3000px] mx-auto flex w-full gap-4"
+      className="masonry min-h-screen mx-auto flex w-full gap-4 h-full"
     >
       {colData.map((col, idx) => (
         <div
@@ -75,14 +115,18 @@ const Masonry: FC = () => {
             <Card
               key={index}
               hoverable
+              loading={loading}
               cover={
-                <img
-                  className="border"
-                  src={item.regular_url}
+                <SImage
+                  className="border w-full h-full"
+                  src={item.url}
+                  onLoad={() => {
+                    setLoading(false);
+                  }}
                 />
               }
             >
-              <span className="line-clamp-2 text-base">{item.title + " " + idx}</span>
+              <span className="line-clamp-2 text-base">{item.id + " " + item.title}</span>
             </Card>
           ))}
         </div>

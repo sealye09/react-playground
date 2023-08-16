@@ -38,7 +38,6 @@ const WaterFallPage: FC = () => {
         },
       })
       .then((res) => {
-        console.log(res);
         setList(
           list.concat(
             res.data.data.rows.map((item: any) => {
