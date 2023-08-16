@@ -47,7 +47,7 @@ function App() {
         />
       </Routes>
 
-      <ToastContainer />
+      <ToastContainer duration={9999999999} />
     </ToastProvider>
   );
 }

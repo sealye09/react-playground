@@ -5,7 +5,17 @@ import { ToastContext, ToastType } from ".";
 import ToastIcon from "./ToastIcon";
 
 const bgColorVariant = cva(
-  ["flex", "justify-between", "gap-2", "px-4", "py-2", "rounded-md", "shadow-lg", "min-w-fit"],
+  [
+    "flex",
+    "justify-between",
+    "gap-2",
+    "px-4",
+    "py-2",
+    "rounded-md",
+    "shadow-lg",
+    "w-fit",
+    "mx-auto",
+  ],
   {
     variants: {
       intent: {
@@ -18,7 +28,7 @@ const bgColorVariant = cva(
     defaultVariants: {
       intent: "info",
     },
-  },
+  }
 );
 
 const hoverBgColorVariant = cva(
@@ -45,7 +55,7 @@ const hoverBgColorVariant = cva(
     defaultVariants: {
       intent: "info",
     },
-  },
+  }
 );
 
 const textColorVariant = cva(["text-sm"], {
