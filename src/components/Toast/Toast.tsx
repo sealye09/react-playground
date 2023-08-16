@@ -1,9 +1,11 @@
 import { FC, useContext } from "react";
 import { Icon } from "@iconify/react";
 import { VariantProps, cva } from "class-variance-authority";
+
+import { useTimeout } from "@/hooks/useTimeout";
+
 import { ToastContext, ToastType } from ".";
 import ToastIcon from "./ToastIcon";
-import { useInterval } from "@/hooks/useInterval";
 
 const bgColorVariant = cva(
   ["flex justify-between gap-2 px-4 py-2 rounded-md shadow-lg w-fit mx-auto"],
@@ -65,7 +67,7 @@ interface ToastProps
 const Toast: FC<ToastProps> = ({ id, message, type, duration = 3000 }) => {
   const { dispatch } = useContext(ToastContext);
 
-  const { start, pause } = useInterval({ delay: duration, callback: () => onDismiss(id) });
+  const { start, pause } = useTimeout({ delay: duration, callback: () => onDismiss(id) });
 
   const onDismiss = (id: string) => {
     dispatch({
