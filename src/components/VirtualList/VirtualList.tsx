@@ -68,9 +68,9 @@ const VirtualList: FC<VirtualListProps> = ({
   const idx = binarySearch(scrollTop) || 0;
   const startIdx = Math.max(idx - prevCount, 0);
   const endIdx = Math.min(idx + visibleCount + nextCount, positions.length - 1) || visibleCount;
-  console.log("🚀 ~ file: VirtualList.tsx:68 ~ startIdx:", startIdx);
-  console.log("🚀 ~ file: VirtualList.tsx:70 ~ endIdx:", endIdx);
-  console.log(positions);
+  // console.log("🚀 ~ file: VirtualList.tsx:68 ~ startIdx:", startIdx);
+  // console.log("🚀 ~ file: VirtualList.tsx:70 ~ endIdx:", endIdx);
+  // console.log(positions);
 
   const listHeight =
     positions.length > 0 && positions[positions.length - 1]
