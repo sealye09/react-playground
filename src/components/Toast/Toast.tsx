@@ -1,21 +1,12 @@
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext } from "react";
 import { Icon } from "@iconify/react";
 import { VariantProps, cva } from "class-variance-authority";
 import { ToastContext, ToastType } from ".";
 import ToastIcon from "./ToastIcon";
+import { useInterval } from "@/hooks/useInterval";
 
 const bgColorVariant = cva(
-  [
-    "flex",
-    "justify-between",
-    "gap-2",
-    "px-4",
-    "py-2",
-    "rounded-md",
-    "shadow-lg",
-    "w-fit",
-    "mx-auto",
-  ],
+  ["flex justify-between gap-2 px-4 py-2 rounded-md shadow-lg w-fit mx-auto"],
   {
     variants: {
       intent: {
@@ -32,17 +23,7 @@ const bgColorVariant = cva(
 );
 
 const hoverBgColorVariant = cva(
-  [
-    "w-5",
-    "h-5",
-    "p-1",
-    "rounded-md",
-    "flex",
-    "justify-center",
-    "items-center",
-    "translate-x-4",
-    "-translate-y-1.5",
-  ],
+  ["w-5 h-5 p-1 rounded-md", "flex justify-center items-center", "translate-x-4 -translate-y-1.5"],
   {
     variants: {
       intent: {
@@ -81,8 +62,10 @@ interface ToastProps
   duration?: number;
 }
 
-const Toast: FC<ToastProps> = ({ id, message, type, duration }) => {
+const Toast: FC<ToastProps> = ({ id, message, type, duration = 3000 }) => {
   const { dispatch } = useContext(ToastContext);
+
+  const { start, pause } = useInterval({ delay: duration, callback: () => onDismiss(id) });
 
   const onDismiss = (id: string) => {
     dispatch({
@@ -91,23 +74,22 @@ const Toast: FC<ToastProps> = ({ id, message, type, duration }) => {
     });
   };
 
-  useEffect(() => {
-    if (duration) {
-      const interval = setInterval(() => {
-        onDismiss(id);
-      }, duration);
+  const handlePauseTimer = () => {
+    console.log("pause timer");
+    pause();
+  };
 
-      return () => {
-        console.log("clear interval");
-        clearInterval(interval);
-      };
-    }
-  }, []);
+  const handleStartTimer = () => {
+    console.log("start timer");
+    start();
+  };
 
   return (
     <div
       key={id}
       className={bgColorVariant({ intent: type })}
+      onMouseEnter={handlePauseTimer}
+      onMouseLeave={handleStartTimer}
     >
       <div className="w-6 h-6 flex justify-center items-center">
         <ToastIcon type={type} />
