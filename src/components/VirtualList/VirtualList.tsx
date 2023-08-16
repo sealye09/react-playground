@@ -87,7 +87,7 @@ const VirtualList: FC<VirtualListProps> = ({
 
   const contentStyle = {
     width: "100%",
-    // height: `${contentHeight}px`,
+    height: `${contentHeight}px`,
     transform: `translateY(${contentOffset}px)`,
   };
 
@@ -164,10 +164,9 @@ const VirtualList: FC<VirtualListProps> = ({
       }
     });
 
-    const idx = Number(children[0].getAttribute("data-index"));
+    const idx = Number(children[0].getAttribute("data-index") || "0");
     let startHeight = newPositions[idx].dHeight;
     newPositions[idx].dHeight = 0;
-    if (!idx) return;
 
     for (let i = idx + 1; i < newPositions.length; i++) {
       newPositions[i].top = newPositions[i - 1].bottom;
@@ -205,14 +204,6 @@ const VirtualList: FC<VirtualListProps> = ({
       style={containerStyle}
       onScroll={handleScroll}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: `${listHeight}px`,
-        }}
-      ></div>
       <div
         ref={contentRef}
         style={contentStyle}

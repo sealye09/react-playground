@@ -18,7 +18,7 @@ const WaterFallPage: FC = () => {
   const [page, setPage] = useState(1); // 页码
   const [loading, setLoading] = useState(false); // 加载状态
 
-  const columns = 5; // 列数
+  const columns = 4; // 列数
   const gapX = 30; // 水平间距
   const gapY = 20; // 垂直间距
 
@@ -88,7 +88,7 @@ const WaterFallPage: FC = () => {
               />
             }
           >
-            <span>{item.title + " " + idx}</span>
+            <span className="line-clamp-2 text-base">{item.title + " " + idx}</span>
           </Card>
         </MasonryItem>
       ))}

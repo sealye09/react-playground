@@ -49,20 +49,6 @@ export const Masonry: FC<MasonryProps> = ({
 }) => {
   const containerRef = useRef(null);
 
-  const contentHeights = [
-    {
-      line: 1,
-      // 字数范围
-      range: [0, 42],
-      height: 70,
-    },
-    {
-      line: 2,
-      range: [42, 999],
-      height: 92,
-    },
-  ];
-
   const handleScroll = useThrottle(() => {
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
@@ -95,10 +81,7 @@ export const Masonry: FC<MasonryProps> = ({
       child.style.top = `${top}px`;
 
       // 根据图片的宽高比例计算高度, items 中的图片宽高比例，加上 gapY 和内容的行数
-      const chars = items[idx].title.length;
-      const contentHeight =
-        contentHeights.find((item) => chars >= item.range[0] && chars < item.range[1])?.height ||
-        contentHeights[0].height;
+      const contentHeight = child.querySelector(".ant-card-body")?.clientHeight || 0;
       const picHeight = colWidth / (items[idx].width / items[idx].height);
       console.log("🚀 ~ file: Masonry.tsx:103 ~ children.forEach ~ colWidth:", colWidth);
       console.log("🚀 ~ file: Masonry.tsx:103 ~ children.forEach ~ picHeight:", picHeight);
