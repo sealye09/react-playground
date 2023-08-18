@@ -28,45 +28,51 @@ const Masonry: FC = () => {
   const gapX = 20; // 水平间距
   const gapY = 20; // 垂直间距
 
-  const handleScroll = useThrottle(() => {
-    if (!containerRef.current) return;
-    // 监听滚动事件，到达底部时加载更多
-    const container = containerRef.current as HTMLDivElement;
-    const containerHeight = container.clientHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-    if (scrollHeight - scrollTop - containerHeight < 20) {
-      setPage((page) => page + 1);
-    }
-  }, 1000);
+  const handleScroll = useThrottle({
+    callback: () => {
+      if (!containerRef.current) return;
+      // 监听滚动事件，到达底部时加载更多
+      const container = containerRef.current as HTMLDivElement;
+      const containerHeight = container.clientHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      if (scrollHeight - scrollTop - containerHeight < 20) {
+        setPage((page) => page + 1);
+      }
+    },
+    delay: 1000,
+  });
 
-  const getData = useThrottle(async () => {
-    axios
-      .get("https://www.vilipix.com/api/v1/picture/public", {
-        params: {
-          page,
-          limit,
-          offset: (Number(page) - 1) * Number(limit),
-          sort: "hot",
-          type: 0,
-        },
-      })
-      .then((res) => {
-        setList(
-          list.concat(
-            res.data.data.rows.map((item: any, idx: number) => {
-              return {
-                id: idx + list.length,
-                title: item.title,
-                url: item.regular_url,
-                height: item.height,
-                width: item.width,
-              };
-            })
-          )
-        );
-      });
-  }, 1000);
+  const getData = useThrottle({
+    callback: async () => {
+      axios
+        .get("https://www.vilipix.com/api/v1/picture/public", {
+          params: {
+            page,
+            limit,
+            offset: (Number(page) - 1) * Number(limit),
+            sort: "hot",
+            type: 0,
+          },
+        })
+        .then((res) => {
+          setList(
+            list.concat(
+              res.data.data.rows.map((item: any, idx: number) => {
+                return {
+                  id: idx + list.length,
+                  title: item.title,
+                  url: item.regular_url,
+                  height: item.height,
+                  width: item.width,
+                };
+              })
+            )
+          );
+        });
+    },
+    delay: 1000,
+  });
 
   // 初始化
   useEffect(() => {

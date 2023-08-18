@@ -49,17 +49,20 @@ export const Masonry: FC<MasonryProps> = ({
 }) => {
   const containerRef = useRef(null);
 
-  const handleScroll = useThrottle(() => {
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
+  const handleScroll = useThrottle({
+    callback: () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
 
-    if (
-      scrollTop + window.innerHeight >= scrollHeight ||
-      scrollTop + window.innerHeight >= scrollHeight - 100
-    ) {
-      onScrollEnd && onScrollEnd();
-    }
-  }, 1000);
+      if (
+        scrollTop + window.innerHeight >= scrollHeight ||
+        scrollTop + window.innerHeight >= scrollHeight - 100
+      ) {
+        onScrollEnd && onScrollEnd();
+      }
+    },
+    delay: 500,
+  });
 
   const handleResize = () => {
     if (!containerRef.current) return;

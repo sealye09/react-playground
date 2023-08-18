@@ -1,15 +1,21 @@
 import { useRef } from "react";
 
-export const useThrottle = (callback: Function, delay = 3000) => {
+interface IUseThrottle {
+  callback: Function;
+  delay?: number;
+}
+
+export const useThrottle = ({ callback, delay = 300 }: IUseThrottle) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const throttledCallback = (...args: any[]) => {
-    if (!timeoutRef.current) {
-      timeoutRef.current = setTimeout(() => {
-        callback(...args);
-        timeoutRef.current = null;
-      }, delay);
+    if (timeoutRef.current) {
+      return;
     }
+    timeoutRef.current = setTimeout(() => {
+      callback(...args);
+      timeoutRef.current = null;
+    }, delay);
   };
 
   return throttledCallback;

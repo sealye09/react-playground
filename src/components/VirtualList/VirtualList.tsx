@@ -91,22 +91,25 @@ const VirtualList: FC<VirtualListProps> = ({
     transform: `translateY(${contentOffset}px)`,
   };
 
-  const handleScroll = useThrottle(() => {
-    if (!containerRef.current || !contentRef.current) return;
+  const handleScroll = useThrottle({
+    callback: () => {
+      if (!containerRef.current || !contentRef.current) return;
 
-    const { clientHeight, scrollHeight, scrollTop } = containerRef.current;
-    console.log("contentHeight:", contentHeight);
-    console.log("scrollTop:", scrollTop);
+      const { clientHeight, scrollHeight, scrollTop } = containerRef.current;
+      console.log("contentHeight:", contentHeight);
+      console.log("scrollTop:", scrollTop);
 
-    setScrollTop(scrollTop);
+      setScrollTop(scrollTop);
 
-    if (scrollHeight - clientHeight - scrollTop < 20) {
-      console.log("到底了");
-      if (endIdx === positions.length - 1) {
-        onScrollEnd && onScrollEnd();
+      if (scrollHeight - clientHeight - scrollTop < 20) {
+        console.log("到底了");
+        if (endIdx === positions.length - 1) {
+          onScrollEnd && onScrollEnd();
+        }
       }
-    }
-  }, 500);
+    },
+    delay: 500,
+  });
 
   // 初始化 positions
   const initPositions = () => {

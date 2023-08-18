@@ -49,17 +49,20 @@ const FixedList: FC<FixedListProps> = ({
     height: `${itemHeight}px`,
   };
 
-  const handleScroll = useThrottle(() => {
-    if (!containerRef.current) return;
+  const handleScroll = useThrottle({
+    callback: () => {
+      if (!containerRef.current) return;
 
-    const { clientHeight, scrollHeight, scrollTop } = containerRef.current;
-    console.log("clientHeight, scrollHeight, scrollTop:", clientHeight, scrollHeight, scrollTop);
-    setScrollTop(scrollTop);
+      const { clientHeight, scrollHeight, scrollTop } = containerRef.current;
+      console.log("clientHeight, scrollHeight, scrollTop:", clientHeight, scrollHeight, scrollTop);
+      setScrollTop(scrollTop);
 
-    if (scrollHeight - clientHeight - scrollTop < 10) {
-      onScrollEnd && onScrollEnd();
-    }
-  }, 500);
+      if (scrollHeight - clientHeight - scrollTop < 10) {
+        onScrollEnd && onScrollEnd();
+      }
+    },
+    delay: 500,
+  });
 
   return (
     <div
