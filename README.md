@@ -11,6 +11,7 @@
 5. useTimeout
 6. useIntersectionObserver
 7. useFetch
+8. useEvent
 
 ### 组件
 
