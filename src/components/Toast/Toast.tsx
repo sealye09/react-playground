@@ -2,10 +2,9 @@ import { FC, useContext } from "react";
 import { Icon } from "@iconify/react";
 import { VariantProps, cva } from "class-variance-authority";
 
-import { useTimeout } from "@/hooks/useTimeout";
-
-import { ToastContext, ToastType } from ".";
+import { ToastAction, ToastContext, ToastType } from ".";
 import ToastIcon from "./ToastIcon";
+import { cn } from "@/utils/cn";
 
 const bgColorVariant = cva(
   ["flex justify-between gap-2 px-4 py-2 rounded-md shadow-lg w-fit mx-auto"],
@@ -64,34 +63,20 @@ interface ToastProps
   duration?: number;
 }
 
-const Toast: FC<ToastProps> = ({ id, message, type, duration = 3000 }) => {
+const Toast: FC<ToastProps> = ({ id, message, type }) => {
   const { dispatch } = useContext(ToastContext);
-
-  const { start, pause } = useTimeout({ delay: duration, callback: () => onDismiss(id) });
 
   const onDismiss = (id: string) => {
     dispatch({
-      type: "DELETE_TOAST",
+      type: ToastAction.DELETE_TOAST,
       payload: id,
     });
-  };
-
-  const handlePauseTimer = () => {
-    console.log("pause timer");
-    pause();
-  };
-
-  const handleStartTimer = () => {
-    console.log("start timer");
-    start();
   };
 
   return (
     <div
       key={id}
-      className={bgColorVariant({ intent: type })}
-      onMouseEnter={handlePauseTimer}
-      onMouseLeave={handleStartTimer}
+      className={cn(bgColorVariant({ intent: type }))}
     >
       <div className="w-6 h-6 flex justify-center items-center">
         <ToastIcon type={type} />

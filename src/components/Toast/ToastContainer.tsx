@@ -1,7 +1,7 @@
 import { FC, useContext } from "react";
 import { VariantProps, cva } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
 
+import { cn } from "@/utils/cn";
 import { ToastContext, ToastPosition } from ".";
 import Toast from "./Toast";
 
@@ -29,21 +29,37 @@ export const ToastContainer: FC<ToastContainerProps> = ({
   position = "top-center",
   duration = 3000,
 }) => {
-  const { state } = useContext(ToastContext);
+  const { state, pauseAll, startAll } = useContext(ToastContext);
+
+  const handleMouseEnter = () => {
+    // console.log("mouse enter");
+    pauseAll();
+  };
+
+  const handleMouseLeave = () => {
+    // console.log("mouse leave");
+    startAll();
+  };
+
+  if (!state) return null;
+
   return (
-    <div className={twMerge(positionVariant({ position }))}>
-      {!!state &&
-        state.map((toast) => {
-          return (
-            <Toast
-              key={toast.id}
-              id={toast.id}
-              message={toast.message}
-              type={toast.type}
-              duration={duration}
-            />
-          );
-        })}
+    <div
+      className={cn(positionVariant({ position }))}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {state.map((toast) => {
+        return (
+          <Toast
+            key={toast.id}
+            id={toast.id}
+            message={toast.message}
+            type={toast.type}
+            duration={duration}
+          />
+        );
+      })}
     </div>
   );
 };

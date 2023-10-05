@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef } from "react";
-import { twMerge } from "tailwind-merge";
 
 import { useThrottle } from "@/hooks/useThrottle";
 import { IItem } from "@/pages/WaterFallPage";
+import { cn } from "@/utils/cn";
 
 export interface MasonryItemProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: string;
@@ -18,7 +18,7 @@ export const MasonryItem: FC<MasonryItemProps> = ({
 }) => {
   return (
     <div
-      className={twMerge("absolute transition-all duration-300", className)}
+      className={cn("absolute transition-all duration-300", className)}
       style={{
         height,
         width,

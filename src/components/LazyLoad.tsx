@@ -1,6 +1,6 @@
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { cn } from "@/utils/cn";
 import { FC, HTMLAttributes, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
 
 interface LazyLoadProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -22,7 +22,7 @@ const LazyLoad: FC<LazyLoadProps> = ({ children, className, ...rest }) => {
   return (
     <div
       ref={divRef}
-      className={twMerge(className)}
+      className={cn(className)}
       {...rest}
     >
       {isVisiable ? children : null}

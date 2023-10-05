@@ -1,5 +1,5 @@
+import { cn } from "@/utils/cn";
 import { useState, useEffect, FC, useRef } from "react";
-import { twMerge } from "tailwind-merge";
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   height?: string;
@@ -23,17 +23,17 @@ const SImage: FC<LazyImageProps> = ({ height, width, src, alt, blurImage, classN
   }, [src]);
 
   return (
-    <div className={twMerge("relative", height, width)}>
+    <div className={cn("relative", height, width)}>
       {isLoading && (
         <div
-          className={twMerge(
+          className={cn(
             "absolute inset-0 w-full h-full object-cover filter blur-sm bg-gray-200/20",
             className
           )}
         />
       )}
       <img
-        className={twMerge(isLoading ? "opacity-0" : "opacity-100", "h-full w-full", className)}
+        className={cn(isLoading ? "opacity-0" : "opacity-100", "h-full w-full", className)}
         src={imageSrc}
         alt={alt}
         {...rest}

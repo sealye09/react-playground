@@ -1,6 +1,6 @@
 import { FC, useContext } from "react";
 import { Button } from "antd";
-import { ToastContext } from "@/components/Toast";
+import { ToastAction, ToastContext } from "@/components/Toast";
 
 interface MessagePageProps {}
 
@@ -10,7 +10,7 @@ const MessagePage: FC<MessagePageProps> = ({}) => {
   const handleSuccess = () => {
     console.log("Success");
     dispatch({
-      type: "ADD_TOAST",
+      type: ToastAction.ADD_TOAST,
       payload: {
         message: "Success",
         type: "success",
@@ -22,7 +22,7 @@ const MessagePage: FC<MessagePageProps> = ({}) => {
     console.log("Info");
 
     dispatch({
-      type: "ADD_TOAST",
+      type: ToastAction.ADD_TOAST,
       payload: {
         message: "Info",
         type: "info",
@@ -33,7 +33,7 @@ const MessagePage: FC<MessagePageProps> = ({}) => {
   const handleWarning = () => {
     console.log("Warning");
     dispatch({
-      type: "ADD_TOAST",
+      type: ToastAction.ADD_TOAST,
       payload: {
         message: "Warning",
         type: "warning",
@@ -44,7 +44,7 @@ const MessagePage: FC<MessagePageProps> = ({}) => {
   const handleError = () => {
     console.log("Error");
     dispatch({
-      type: "ADD_TOAST",
+      type: ToastAction.ADD_TOAST,
       payload: {
         message: "Error",
         type: "error",

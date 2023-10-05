@@ -7,7 +7,7 @@
  * @param value
  * @returns {boolean}
  */
-export const isNumber = (value: any): boolean => {
+export const isNumber = (value: any): value is number => {
   return typeof value === "number";
 };
 
@@ -16,7 +16,7 @@ export const isNumber = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isString = (value: any): boolean => {
+export const isString = (value: any): value is string => {
   return typeof value === "string";
 };
 
@@ -25,7 +25,7 @@ export const isString = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isFunction = (value: any): boolean => {
+export const isFunction = (value: any): value is Function => {
   return typeof value === "function";
 };
 
@@ -34,7 +34,7 @@ export const isFunction = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isBoolean = (value: any): boolean => {
+export const isBoolean = (value: any): value is boolean => {
   return typeof value === "boolean";
 };
 
@@ -43,7 +43,7 @@ export const isBoolean = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isUndefined = (value: any): boolean => {
+export const isUndefined = (value: any): value is undefined => {
   return typeof value === "undefined";
 };
 
@@ -52,7 +52,7 @@ export const isUndefined = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isNull = (value: any): boolean => {
+export const isNull = (value: any): value is null => {
   return value === null;
 };
 
@@ -61,7 +61,7 @@ export const isNull = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isObject = (value: any): boolean => {
+export const isObject = (value: any): value is object => {
   return isNull(value) && typeof value === "object";
 };
 
@@ -70,7 +70,7 @@ export const isObject = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isArray = (value: any): boolean => {
+export const isArray = (value: any): value is any[] => {
   return Array.isArray(value);
 };
 
@@ -79,7 +79,7 @@ export const isArray = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isDate = (value: any): boolean => {
+export const isDate = (value: any): value is Date => {
   return Object.prototype.toString.call(value) === "[object Date]";
 };
 
@@ -88,6 +88,39 @@ export const isDate = (value: any): boolean => {
  * @param value
  * @returns {boolean}
  */
-export const hasProperty = (obj: object, key: string): boolean => {
+export const hasProperty = <T, K extends keyof T>(
+  obj: T,
+  key: K
+): obj is T & Record<K, unknown> => {
   return Object.prototype.hasOwnProperty.call(obj, key);
+};
+
+const myObject: unknown = Math.random() > 0.5 ? { name: "John", age: 30 } : { age: 30 };
+
+if (hasProperty(myObject, "age")) {
+  // 在这里，TypeScript 知道 myObject 具有 "name" 属性
+  console.log(myObject.name);
+}
+
+type petsGroup = "dog" | "cat" | "fish";
+interface IPetInfo {
+  name: string;
+  age: number;
+}
+
+type IPets = Record<petsGroup, IPetInfo>;
+
+const animalsInfo: IPets = {
+  dog: {
+    name: "dogName",
+    age: 2,
+  },
+  cat: {
+    name: "catName",
+    age: 3,
+  },
+  fish: {
+    name: "fishName",
+    age: 5,
+  },
 };

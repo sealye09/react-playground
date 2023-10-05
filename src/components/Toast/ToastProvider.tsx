@@ -1,6 +1,9 @@
-import { FC, createContext, useReducer } from "react";
+import { ReactNode, Reducer, createContext, useReducer, useRef } from "react";
 
-export type ToastActionType = "ADD_TOAST" | "DELETE_TOAST";
+export enum ToastAction {
+  ADD_TOAST = "ADD_TOAST",
+  DELETE_TOAST = "DELETE_TOAST",
+}
 export type ToastType = "success" | "error" | "warning" | "info";
 export type ToastPosition =
   | "top-left"
@@ -10,45 +13,91 @@ export type ToastPosition =
   | "bottom-center"
   | "bottom-right";
 
-interface IToastAction {
-  type: ToastActionType;
-  payload: any;
-}
+type IToastAction =
+  | {
+      type: ToastAction.ADD_TOAST;
+      payload: {
+        message: string;
+        type: ToastType;
+        duration?: number;
+      };
+    }
+  | {
+      type: ToastAction.DELETE_TOAST;
+      payload: string;
+    };
 
-export interface IToast {
+export type IToast = {
   id: string;
   message: string;
   type: ToastType;
   duration?: number;
-}
+};
 
-interface IToastContext {
+type IToastContext = {
   state: IToast[];
   dispatch: React.Dispatch<IToastAction>;
-}
+  pauseAll: () => void;
+  startAll: () => void;
+};
 
-export const ToastContext = createContext<IToastContext>([] as any);
+export const ToastContext = createContext<IToastContext>({} as IToastContext);
 
-interface IToastProvider {
-  children: React.ReactNode;
-}
+export const ToastProvider = ({ children }: { children: ReactNode }) => {
+  const timers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-export const ToastProvider: FC<IToastProvider> = ({ children }) => {
-  const [state, dispatch] = useReducer<React.Reducer<IToast[], IToastAction>>((state, action) => {
+  const pauseAll = () => {
+    timers.current.forEach((timer) => clearTimeout(timer));
+  };
+
+  const startAll = () => {
+    let accDuration = 500;
+    timers.current.forEach((_, id) => {
+      const toast = state.find((toast) => toast.id === id);
+      if (toast) {
+        const timer = setTimeout(() => {
+          dispatch({ type: ToastAction.DELETE_TOAST, payload: id });
+        }, Number(toast.duration) + accDuration);
+
+        timers.current.set(id, timer);
+        accDuration += 500;
+      }
+    });
+  };
+
+  const [state, dispatch] = useReducer<Reducer<IToast[], IToastAction>>((state, action) => {
     switch (action.type) {
       case "ADD_TOAST":
-        const id = Math.random().toString(36).substr(2, 9);
+        const id = Math.random().toString(36).slice(2, 11);
         const duration = action.payload.duration || 3000;
+
+        const timer = setTimeout(() => {
+          dispatch({ type: ToastAction.DELETE_TOAST, payload: id });
+        }, duration);
+
+        timers.current.set(id, timer);
+
         if (state.length > 0) {
-          return [...state, { ...action.payload, id, duration }];
-        } else return [{ ...action.payload, id, duration }];
+          return [...state, { ...action.payload, id, duration: duration as number }];
+        } else return [{ ...action.payload, id, duration: duration as number }];
 
       case "DELETE_TOAST":
+        const timerToDelete = timers.current.get(action.payload);
+        if (timerToDelete) {
+          clearTimeout(timerToDelete);
+          timers.current.delete(action.payload);
+        }
+
         return state.filter((toast) => toast.id !== action.payload);
+
       default:
         return state;
     }
-  }, [] as any);
+  }, []);
 
-  return <ToastContext.Provider value={{ state, dispatch }}>{children}</ToastContext.Provider>;
+  return (
+    <ToastContext.Provider value={{ state, dispatch, pauseAll, startAll }}>
+      {children}
+    </ToastContext.Provider>
+  );
 };
