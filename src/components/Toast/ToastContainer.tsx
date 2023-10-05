@@ -4,6 +4,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 import { ToastContext, ToastPosition } from ".";
 import Toast from "./Toast";
+import { AnimatePresence, motion } from "framer-motion";
 
 const positionVariant = cva(["absolute z-50 space-y-4 min-w-fit"], {
   variants: {
@@ -22,13 +23,9 @@ const positionVariant = cva(["absolute z-50 space-y-4 min-w-fit"], {
 });
 interface ToastContainerProps extends VariantProps<typeof positionVariant> {
   position?: ToastPosition;
-  duration?: number;
 }
 
-export const ToastContainer: FC<ToastContainerProps> = ({
-  position = "top-center",
-  duration = 3000,
-}) => {
+export const ToastContainer: FC<ToastContainerProps> = ({ position = "top-center" }) => {
   const { state, pauseAll, startAll } = useContext(ToastContext);
 
   const handleMouseEnter = () => {
@@ -49,17 +46,24 @@ export const ToastContainer: FC<ToastContainerProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {state.map((toast) => {
-        return (
-          <Toast
+      <AnimatePresence>
+        {state.map((toast) => (
+          <motion.div
             key={toast.id}
-            id={toast.id}
-            message={toast.message}
-            type={toast.type}
-            duration={duration}
-          />
-        );
-      })}
+            className="relative"
+            initial={{ opacity: 0, scale: 0.85, y: -50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: -50 }}
+            transition={{ duration: 0.3, type: "ease" }}
+          >
+            <Toast
+              id={toast.id}
+              message={toast.message}
+              type={toast.type}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 };

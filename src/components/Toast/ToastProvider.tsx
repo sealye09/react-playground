@@ -31,7 +31,7 @@ export type IToast = {
   id: string;
   message: string;
   type: ToastType;
-  duration?: number;
+  duration: number;
 };
 
 type IToastContext = {
@@ -78,8 +78,8 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
         timers.current.set(id, timer);
 
         if (state.length > 0) {
-          return [...state, { ...action.payload, id, duration: duration as number }];
-        } else return [{ ...action.payload, id, duration: duration as number }];
+          return [...state, { ...action.payload, id, duration }];
+        } else return [{ ...action.payload, id, duration }];
 
       case "DELETE_TOAST":
         const timerToDelete = timers.current.get(action.payload);

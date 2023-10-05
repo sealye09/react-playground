@@ -60,7 +60,6 @@ interface ToastProps
   id: string;
   message: string;
   type: ToastType;
-  duration?: number;
 }
 
 const Toast: FC<ToastProps> = ({ id, message, type }) => {
@@ -74,10 +73,7 @@ const Toast: FC<ToastProps> = ({ id, message, type }) => {
   };
 
   return (
-    <div
-      key={id}
-      className={cn(bgColorVariant({ intent: type }))}
-    >
+    <div className={cn(bgColorVariant({ intent: type }))}>
       <div className="w-6 h-6 flex justify-center items-center">
         <ToastIcon type={type} />
       </div>

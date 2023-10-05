@@ -9,6 +9,8 @@ import { ToastContainer, ToastProvider } from "./components/Toast";
 function App() {
   return (
     <ToastProvider>
+      <ToastContainer />
+
       {getToken() ? <></> : <></>}
       <Routes>
         <Route
@@ -46,8 +48,6 @@ function App() {
           element={<h2>404</h2>}
         />
       </Routes>
-
-      <ToastContainer />
     </ToastProvider>
   );
 }
