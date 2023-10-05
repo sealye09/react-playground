@@ -4,13 +4,11 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { getMenus, getRoutes } from "@/router/index";
 import { getToken } from "./utils/tools";
 import Login from "./pages/Login";
-import { ToastContainer, ToastProvider } from "./components/Toast";
+import { ToastProvider } from "./components/Toast/ToastProvider";
 
 function App() {
   return (
-    <ToastProvider>
-      <ToastContainer />
-
+    <ToastProvider position="top-center">
       {getToken() ? <></> : <></>}
       <Routes>
         <Route

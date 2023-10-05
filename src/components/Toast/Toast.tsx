@@ -1,10 +1,11 @@
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { Icon } from "@iconify/react";
 import { VariantProps, cva } from "class-variance-authority";
 
-import { ToastAction, ToastContext, ToastType } from ".";
-import ToastIcon from "./ToastIcon";
 import { cn } from "@/utils/cn";
+
+import ToastIcon from "./ToastIcon";
+import { ToastType, ToastContext, ToastAction } from "./ToastProvider";
 
 const bgColorVariant = cva(
   ["flex justify-between gap-2 px-4 py-2 rounded-md shadow-lg w-fit mx-auto"],
@@ -54,15 +55,14 @@ const textColorVariant = cva(["text-sm"], {
   },
 });
 
-interface ToastProps
-  extends VariantProps<typeof bgColorVariant>,
-    VariantProps<typeof hoverBgColorVariant> {
+type ToastProps = {
   id: string;
   message: string;
   type: ToastType;
-}
+} & VariantProps<typeof bgColorVariant> &
+  VariantProps<typeof hoverBgColorVariant>;
 
-const Toast: FC<ToastProps> = ({ id, message, type }) => {
+const Toast = ({ id, message, type }: ToastProps) => {
   const { dispatch } = useContext(ToastContext);
 
   const onDismiss = (id: string) => {

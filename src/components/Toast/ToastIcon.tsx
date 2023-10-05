@@ -1,13 +1,8 @@
-import { FC } from "react";
 import { Icon } from "@iconify/react";
-import { ToastType } from ".";
+import { ToastType } from "./ToastProvider";
 
-interface ToastIconProps {
-  type: ToastType;
-}
-
-const ToastIcon: FC<ToastIconProps> = (props) => {
-  switch (props.type) {
+const ToastIcon = ({ type }: { type: ToastType }) => {
+  switch (type) {
     case "success":
       return (
         <Icon

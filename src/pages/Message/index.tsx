@@ -1,54 +1,34 @@
-import { FC, useContext } from "react";
 import { Button } from "antd";
-import { ToastAction, ToastContext } from "@/components/Toast";
+import { useToast } from "@/components/Toast/useToast";
 
-interface MessagePageProps {}
-
-const MessagePage: FC<MessagePageProps> = ({}) => {
-  const { dispatch } = useContext(ToastContext);
+const MessagePage = () => {
+  const { toast, success, info } = useToast();
 
   const handleSuccess = () => {
     console.log("Success");
-    dispatch({
-      type: ToastAction.ADD_TOAST,
-      payload: {
-        message: "Success",
-        type: "success",
-      },
-    });
+    success("Success");
   };
 
   const handleInfo = () => {
     console.log("Info");
-
-    dispatch({
-      type: ToastAction.ADD_TOAST,
-      payload: {
-        message: "Info",
-        type: "info",
-      },
-    });
+    info("Info");
   };
 
   const handleWarning = () => {
     console.log("Warning");
-    dispatch({
-      type: ToastAction.ADD_TOAST,
-      payload: {
-        message: "Warning",
-        type: "warning",
-      },
+    toast({
+      message: "Warning",
+      type: "warning",
+      duration: 500,
     });
   };
 
   const handleError = () => {
     console.log("Error");
-    dispatch({
-      type: ToastAction.ADD_TOAST,
-      payload: {
-        message: "Error",
-        type: "error",
-      },
+    toast({
+      message: "Error",
+      type: "error",
+      duration: 500,
     });
   };
 

@@ -1,4 +1,5 @@
 import { ReactNode, Reducer, createContext, useReducer, useRef } from "react";
+import ToastContainer from "./ToastContainer";
 
 export enum ToastAction {
   ADD_TOAST = "ADD_TOAST",
@@ -43,7 +44,13 @@ type IToastContext = {
 
 export const ToastContext = createContext<IToastContext>({} as IToastContext);
 
-export const ToastProvider = ({ children }: { children: ReactNode }) => {
+export const ToastProvider = ({
+  children,
+  position = "top-center",
+}: {
+  children: ReactNode;
+  position?: ToastPosition;
+}) => {
   const timers = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   const pauseAll = () => {
@@ -98,6 +105,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ToastContext.Provider value={{ state, dispatch, pauseAll, startAll }}>
       {children}
+      <ToastContainer position={position} />
     </ToastContext.Provider>
   );
 };
