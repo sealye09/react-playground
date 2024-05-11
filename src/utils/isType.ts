@@ -7,7 +7,7 @@
  * @param value
  * @returns {boolean}
  */
-export const isNumber = (value: any): value is number => {
+export const isNumber = (value: unknown): value is number => {
   return typeof value === "number";
 };
 
@@ -16,7 +16,7 @@ export const isNumber = (value: any): value is number => {
  * @param value
  * @returns {boolean}
  */
-export const isString = (value: any): value is string => {
+export const isString = (value: unknown): value is string => {
   return typeof value === "string";
 };
 
@@ -25,7 +25,9 @@ export const isString = (value: any): value is string => {
  * @param value
  * @returns {boolean}
  */
-export const isFunction = (value: any): value is Function => {
+
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
+export const isFunction = (value: unknown): value is Function => {
   return typeof value === "function";
 };
 
@@ -34,7 +36,7 @@ export const isFunction = (value: any): value is Function => {
  * @param value
  * @returns {boolean}
  */
-export const isBoolean = (value: any): value is boolean => {
+export const isBoolean = (value: unknown): value is boolean => {
   return typeof value === "boolean";
 };
 
@@ -43,7 +45,7 @@ export const isBoolean = (value: any): value is boolean => {
  * @param value
  * @returns {boolean}
  */
-export const isUndefined = (value: any): value is undefined => {
+export const isUndefined = (value: unknown): value is undefined => {
   return typeof value === "undefined";
 };
 
@@ -52,7 +54,7 @@ export const isUndefined = (value: any): value is undefined => {
  * @param value
  * @returns {boolean}
  */
-export const isNull = (value: any): value is null => {
+export const isNull = (value: unknown): value is null => {
   return value === null;
 };
 
@@ -61,7 +63,7 @@ export const isNull = (value: any): value is null => {
  * @param value
  * @returns {boolean}
  */
-export const isObject = (value: any): value is object => {
+export const isObject = (value: unknown): value is object => {
   return isNull(value) && typeof value === "object";
 };
 
@@ -70,7 +72,7 @@ export const isObject = (value: any): value is object => {
  * @param value
  * @returns {boolean}
  */
-export const isArray = (value: any): value is any[] => {
+export const isArray = (value: unknown): value is unknown[] => {
   return Array.isArray(value);
 };
 
@@ -79,48 +81,6 @@ export const isArray = (value: any): value is any[] => {
  * @param value
  * @returns {boolean}
  */
-export const isDate = (value: any): value is Date => {
+export const isDate = (value: unknown): value is Date => {
   return Object.prototype.toString.call(value) === "[object Date]";
-};
-
-/**
- * 判断对象是否存在某个属性
- * @param value
- * @returns {boolean}
- */
-export const hasProperty = <T, K extends keyof T>(
-  obj: T,
-  key: K
-): obj is T & Record<K, unknown> => {
-  return Object.prototype.hasOwnProperty.call(obj, key);
-};
-
-const myObject: unknown = Math.random() > 0.5 ? { name: "John", age: 30 } : { age: 30 };
-
-if (hasProperty(myObject, "age")) {
-  // 在这里，TypeScript 知道 myObject 具有 "name" 属性
-  console.log(myObject.name);
-}
-
-type petsGroup = "dog" | "cat" | "fish";
-interface IPetInfo {
-  name: string;
-  age: number;
-}
-
-type IPets = Record<petsGroup, IPetInfo>;
-
-const animalsInfo: IPets = {
-  dog: {
-    name: "dogName",
-    age: 2,
-  },
-  cat: {
-    name: "catName",
-    age: 3,
-  },
-  fish: {
-    name: "fishName",
-    age: 5,
-  },
 };

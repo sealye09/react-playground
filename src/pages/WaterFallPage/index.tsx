@@ -1,9 +1,10 @@
-import { FC, useEffect, useState } from "react";
-import axios from "axios";
+import { useInfiniteScroll } from "ahooks";
 import { Card } from "antd";
+import axios from "axios";
+import type { FC } from "react";
 
-import { MasonryItem, Masonry } from "@/components/Masonry/Masonry";
 import SImage from "@/components/Image";
+import { Masonry, MasonryItem } from "@/components/Masonry/Masonry";
 
 export interface IItem {
   id: string;
@@ -13,85 +14,96 @@ export interface IItem {
   width: number;
 }
 
-const WaterFallPage: FC = () => {
-  const [list, setList] = useState<IItem[]>([]);
-  const [page, setPage] = useState(1); // 页码
-  const [loading, setLoading] = useState(false); // 加载状态
+type ApiItem = {
+  title: string;
+  regular_url: string;
+  height: number;
+  width: number;
+};
 
+type Result = {
+  total: number;
+  list: IItem[];
+};
+
+const getData = async (
+  offset: number,
+  limit: number,
+  listLength: number,
+): Promise<Result> => {
+  const res = await axios.get("https://www.vilipix.com/api/v1/picture/public", {
+    params: {
+      limit,
+      offset,
+      sort: "hot",
+    },
+  });
+  const data = res.data.data;
+  const list: IItem[] = data.rows.map((item: ApiItem, idx: number) => ({
+    id: idx + listLength,
+    title: item.title,
+    url: item.regular_url,
+    height: item.height,
+    width: item.width,
+  }));
+
+  return {
+    total: data.count,
+    list,
+  };
+};
+
+const WaterFallPage: FC = () => {
   const columns = 4; // 列数
   const gapX = 30; // 水平间距
   const gapY = 20; // 垂直间距
 
-  const limit = 30; // 每页条数
+  const limit = 15; // 每页条数
 
-  const getData = async () => {
-    console.log("load data");
+  const { data, loading, loadingMore, noMore } = useInfiniteScroll(
+    (d: Result | undefined) => {
+      const offset = d?.list?.length || 0;
+      return getData(offset, limit, offset);
+    },
+    {
+      target: () => document,
+      isNoMore: (d) => {
+        const total = d?.total || 0;
+        const listLength = d?.list?.length || 0;
+        const hasMore = total > listLength;
+        return !hasMore;
+      },
+    },
+  );
 
-    axios
-      .get("https://www.vilipix.com/api/v1/picture/public", {
-        params: {
-          page,
-          limit,
-          offset: (Number(page) - 1) * Number(limit),
-          sort: "hot",
-          type: 0,
-        },
-      })
-      .then((res) => {
-        setList(
-          list.concat(
-            res.data.data.rows.map((item: any) => {
-              return {
-                id: item.picture_id,
-                title: item.title,
-                url: item.regular_url,
-                height: item.height,
-                width: item.width,
-              };
-            })
-          )
-        );
-      });
-  };
-
-  useEffect(() => {
-    getData();
-  }, [page]);
-
-  if (!list || !list.length) {
+  if (!data || !data.list.length) {
     return null;
   }
 
   return (
-    <Masonry
-      columns={columns}
-      gapX={gapX}
-      gapY={gapY}
-      onScrollEnd={() => {
-        setPage((page) => page + 1);
-      }}
-      items={list}
-    >
-      {list.map((item, idx) => (
-        <MasonryItem key={idx}>
-          <Card
-            hoverable
-            loading={loading}
-            cover={
-              <SImage
-                className="border w-full h-full"
-                src={item.url}
-                onLoad={() => {
-                  setLoading(false);
-                }}
-              />
-            }
-          >
-            <span className="line-clamp-2 text-base">{item.title + " " + idx}</span>
-          </Card>
-        </MasonryItem>
-      ))}
-    </Masonry>
+    <>
+      <Masonry columns={columns} gapX={gapX} gapY={gapY} items={data.list}>
+        {data?.list.map((item, idx) => (
+          <MasonryItem key={item.id}>
+            <Card
+              cover={<SImage className="border w-full h-full" src={item.url} />}
+            >
+              <span className="line-clamp-2 text-base">
+                {`${item.title} ${idx}`}
+              </span>
+            </Card>
+          </MasonryItem>
+        ))}
+      </Masonry>
+
+      <div className="h-20 flex justify-center items-center">
+        {loading || loadingMore ? (
+          <span className="text-base">加载中...</span>
+        ) : null}
+
+        {noMore ? <span className="text-base">没有更多了</span> : null}
+      </div>
+    </>
   );
 };
 

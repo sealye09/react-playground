@@ -1,5 +1,5 @@
-import { Button } from "antd";
 import { useToast } from "@/components/Toast/useToast";
+import { Button } from "antd";
 
 const MessagePage = () => {
   const { toast, success, info } = useToast();
@@ -35,28 +35,16 @@ const MessagePage = () => {
   return (
     <>
       <div className="flex gap-4">
-        <Button
-          className="bg-green-500"
-          onClick={handleSuccess}
-        >
+        <Button className="bg-green-500" onClick={handleSuccess}>
           Sucess
         </Button>
-        <Button
-          className="bg-blue-500"
-          onClick={handleInfo}
-        >
+        <Button className="bg-blue-500" onClick={handleInfo}>
           Info
         </Button>
-        <Button
-          className="bg-red-500"
-          onClick={handleError}
-        >
+        <Button className="bg-red-500" onClick={handleError}>
           Errror
         </Button>
-        <Button
-          className="bg-yellow-500"
-          onClick={handleWarning}
-        >
+        <Button className="bg-yellow-500" onClick={handleWarning}>
           Warn
         </Button>
       </div>

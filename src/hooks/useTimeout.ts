@@ -15,7 +15,7 @@ export const useTimeout = ({ delay, callback }: IUseTimeout) => {
   }, [callback]);
 
   // 启动定时器
-  const start = () => {
+  const start = useRef(() => {
     if (delay === null || timeoutRef.current !== null) {
       return;
     }
@@ -27,27 +27,27 @@ export const useTimeout = ({ delay, callback }: IUseTimeout) => {
     };
 
     timeoutRef.current = setTimeout(tick, delay);
-  };
+  });
 
   // 暂停定时器
-  const pause = () => {
+  const pause = useRef(() => {
     if (timeoutRef.current !== null) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-  };
+  });
 
   // 根据 delay 的变化，启动或暂停定时器
   useEffect(() => {
     if (delay === null) {
-      pause();
+      pause.current();
     } else {
-      start();
+      start.current();
     }
 
     // 在组件卸载时清除定时器
     return () => {
-      pause();
+      pause.current();
     };
   }, [delay]);
 

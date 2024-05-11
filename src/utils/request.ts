@@ -12,14 +12,12 @@ const request = axios.create({
 
 // Add a request interceptor，发起请求之前执行
 request.interceptors.request.use(
-  function (config) {
-    // Do something before request is sent
-    // @ts-ignore
+  (config) => {
     config.headers.token = getToken();
     NProgress.start(); // 启动loading
     return config;
   },
-  function (error) {
+  (error) => {
     // Do something with request error
     return Promise.reject(error);
   },
@@ -27,13 +25,13 @@ request.interceptors.request.use(
 
 // Add a response interceptor，请求返会之后执行
 request.interceptors.response.use(
-  function (response) {
+  (response) => {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     NProgress.done();
     return response;
   },
-  function (error) {
+  (error) => {
     NProgress.done(); // 关闭loading
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error

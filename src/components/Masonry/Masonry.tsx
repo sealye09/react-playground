@@ -1,7 +1,7 @@
-import { FC, useEffect, useRef } from "react";
+import { useMount, useThrottleFn } from "ahooks";
+import { type FC, useEffect, useRef } from "react";
 
-import { useThrottle } from "@/hooks/useThrottle";
-import { IItem } from "@/pages/WaterFallPage";
+import type { IItem } from "@/pages/WaterFallPage";
 import { cn } from "@/utils/cn";
 
 export interface MasonryItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -47,10 +47,10 @@ export const Masonry: FC<MasonryProps> = ({
   items,
   onScrollEnd,
 }) => {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleScroll = useThrottle({
-    callback: () => {
+  const handleScroll = useThrottleFn(
+    () => {
       const scrollTop = document.documentElement.scrollTop;
       const scrollHeight = document.documentElement.scrollHeight;
 
@@ -58,65 +58,68 @@ export const Masonry: FC<MasonryProps> = ({
         scrollTop + window.innerHeight >= scrollHeight ||
         scrollTop + window.innerHeight >= scrollHeight - 100
       ) {
-        onScrollEnd && onScrollEnd();
+        onScrollEnd?.();
       }
     },
-    delay: 500,
-  });
+    {
+      wait: 500,
+    },
+  );
 
-  const handleResize = () => {
-    if (!containerRef.current) return;
-    const container = containerRef.current as HTMLDivElement;
-    const children = Array.from(container.children) as HTMLElement[];
+  const handleResize = useThrottleFn(
+    () => {
+      if (!containerRef.current) return;
+      const container = containerRef.current;
+      const children = Array.from(container.children) as HTMLDivElement[];
 
-    const containerWidth = container.clientWidth;
-    const colWidth = (containerWidth - (columns - 1) * gapX) / columns;
-    const heights = new Array(columns).fill(0);
+      const containerWidth = container.clientWidth;
+      const colWidth = (containerWidth - (columns - 1) * gapX) / columns;
+      const heights = new Array(columns).fill(0);
 
-    children.forEach((child, idx) => {
-      const height = Math.min(...heights);
-      const columnIndex = heights.indexOf(height);
-      const left = columnIndex * (colWidth + gapX);
-      const top = height;
+      children.forEach((child, idx) => {
+        const height = Math.min(...heights);
+        const columnIndex = heights.indexOf(height);
+        const left = columnIndex * (colWidth + gapX);
+        const top = height;
 
-      child.style.width = `${colWidth}px`;
-      child.style.left = `${left}px`;
-      child.style.top = `${top}px`;
+        child.style.width = `${colWidth}px`;
+        child.style.left = `${left}px`;
+        child.style.top = `${top}px`;
 
-      // 根据图片的宽高比例计算高度, items 中的图片宽高比例，加上 gapY 和内容的行数
-      const contentHeight = child.querySelector(".ant-card-body")?.clientHeight || 0;
-      const picHeight = colWidth / (items[idx].width / items[idx].height);
-      console.log("🚀 ~ file: Masonry.tsx:103 ~ children.forEach ~ colWidth:", colWidth);
-      console.log("🚀 ~ file: Masonry.tsx:103 ~ children.forEach ~ picHeight:", picHeight);
+        // 根据图片的宽高比例计算高度, items 中的图片宽高比例，加上 gapY 和内容的行数
+        const contentHeight =
+          child.querySelector(".ant-card-body")?.clientHeight || 0;
+        const picHeight = colWidth / (items[idx].width / items[idx].height);
 
-      heights[columnIndex] += contentHeight + picHeight + gapY;
-    });
+        heights[columnIndex] += contentHeight + picHeight + gapY;
+      });
 
-    const maxColumnHeight = Math.max(...heights);
-    container.style.height = `${maxColumnHeight}px`;
-  };
+      const maxColumnHeight = Math.max(...heights);
+      container.style.height = `${maxColumnHeight}px`;
+    },
+    {
+      wait: 500,
+    },
+  );
 
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll);
+  useMount(() => {
+    window.addEventListener("resize", handleResize.run);
+    window.addEventListener("scroll", handleScroll.run);
 
-    handleResize();
+    handleResize.run();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize.run);
+      window.removeEventListener("scroll", handleScroll.run);
     };
-  }, []);
+  });
 
   useEffect(() => {
-    handleResize();
-  }, [items.length]);
+    handleResize.run();
+  }, [handleResize]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative mx-auto h-full w-full"
-    >
+    <div ref={containerRef} className="relative mx-auto h-full w-full">
       {children}
     </div>
   );

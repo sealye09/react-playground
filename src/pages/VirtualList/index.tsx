@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useMount } from "ahooks";
+import { type FC, useState } from "react";
 
 import FixedList from "@/components/VirtualList/FixedList";
 import VirtualList from "@/components/VirtualList/VirtualList";
@@ -12,27 +13,37 @@ const randomText = () => {
     .join("");
 };
 
+type Item = {
+  id: number;
+  name: string;
+};
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const mockData = async (from: number, to: number): Promise<Item[]> => {
+  const list: Item[] = [];
+  for (let i = from; i < to; i++) {
+    list.push({
+      id: i,
+      name: i + randomText(),
+    });
+  }
+
+  await wait(1000);
+  return list;
+};
+
 const VirtualListPage: FC = () => {
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<Item[]>();
 
   const handleAdd = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const arr = new Array(50).fill(0);
-        const len = list.length;
-        const items = arr.map((_, idx) => {
-          return {
-            id: idx + len,
-            name: idx + len + randomText(),
-          };
-        });
-        setList(list.concat(items));
-        resolve(null);
-      }, 1000);
+    const len = list?.length || 0;
+    mockData(len, len + 100).then((res) => {
+      setList((prev) => (prev ? [...prev, ...res] : res));
     });
   };
 
-  useEffect(() => {
+  useMount(() => {
     const arr = new Array(100).fill(0);
     const items = arr.map((_, idx) => {
       return {
@@ -42,29 +53,37 @@ const VirtualListPage: FC = () => {
     });
 
     setList(items);
-  }, []);
+  });
 
   return (
     <div className="flex gap-40">
       <div>
-        <h1 className="text-lg my-4">固定高度的虚拟列表</h1>
-        <FixedList
-          items={list}
-          itemHeight={60}
-          containerWidth={200}
-          containerHeight={360}
-          onScrollEnd={handleAdd}
-        />
+        <h1 className="my-4 text-lg">固定高度的虚拟列表</h1>
+        {list ? (
+          <FixedList
+            items={list}
+            itemHeight={60}
+            containerWidth={200}
+            containerHeight={360}
+            onScrollEnd={handleAdd}
+          />
+        ) : (
+          "loading..."
+        )}
       </div>
       <div>
-        <h1 className="text-lg my-4">不定高度的虚拟列表</h1>
-        <VirtualList
-          items={list}
-          estimatedItemHeight={30}
-          containerWidth={300}
-          containerHeight={360}
-          onScrollEnd={handleAdd}
-        />
+        <h1 className="my-4 text-lg">不定高度的虚拟列表</h1>
+        {list ? (
+          <VirtualList
+            items={list}
+            estimatedItemHeight={30}
+            containerWidth={300}
+            containerHeight={360}
+            onScrollEnd={handleAdd}
+          />
+        ) : (
+          "loading..."
+        )}
       </div>
     </div>
   );

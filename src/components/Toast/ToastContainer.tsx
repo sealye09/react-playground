@@ -1,10 +1,10 @@
-import { FC, useContext } from "react";
+import { type VariantProps, cva } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
-import { VariantProps, cva } from "class-variance-authority";
+import { type FC, useContext } from "react";
 
 import { cn } from "@/utils/cn";
 import Toast from "./Toast";
-import { ToastPosition, ToastContext } from "./ToastProvider";
+import { ToastContext, type ToastPosition } from "./ToastProvider";
 
 const positionVariant = cva(["absolute z-50 space-y-4 min-w-fit"], {
   variants: {
@@ -26,7 +26,9 @@ type ToastContainerProps = {
   position?: ToastPosition;
 } & VariantProps<typeof positionVariant>;
 
-export const ToastContainer: FC<ToastContainerProps> = ({ position = "top-center" }) => {
+export const ToastContainer: FC<ToastContainerProps> = ({
+  position = "top-center",
+}) => {
   const { state, pauseAll, startAll } = useContext(ToastContext);
 
   const handleMouseEnter = () => {
@@ -57,11 +59,7 @@ export const ToastContainer: FC<ToastContainerProps> = ({ position = "top-center
             exit={{ opacity: 0, scale: 0.85, y: -50 }}
             transition={{ duration: 0.3, type: "ease" }}
           >
-            <Toast
-              id={toast.id}
-              message={toast.message}
-              type={toast.type}
-            />
+            <Toast id={toast.id} message={toast.message} type={toast.type} />
           </motion.div>
         ))}
       </AnimatePresence>

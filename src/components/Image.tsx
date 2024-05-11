@@ -1,5 +1,6 @@
+import { type FC, useEffect, useRef, useState } from "react";
+
 import { cn } from "@/utils/cn";
-import { useState, useEffect, FC, useRef } from "react";
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   height?: string;
@@ -7,7 +8,15 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   blurImage?: string;
 }
 
-const SImage: FC<LazyImageProps> = ({ height, width, src, alt, blurImage, className, ...rest }) => {
+const SImage: FC<LazyImageProps> = ({
+  height,
+  width,
+  src,
+  alt,
+  blurImage,
+  className,
+  ...rest
+}) => {
   const imgRef = useRef<HTMLImageElement>(new Image());
   const [imageSrc, setImageSrc] = useState(src);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,12 +37,17 @@ const SImage: FC<LazyImageProps> = ({ height, width, src, alt, blurImage, classN
         <div
           className={cn(
             "absolute inset-0 w-full h-full object-cover filter blur-sm bg-gray-200/20",
-            className
+            className,
           )}
         />
       )}
+      {/* biome-ignore lint/a11y/useAltText: <explanation> */}
       <img
-        className={cn(isLoading ? "opacity-0" : "opacity-100", "h-full w-full", className)}
+        className={cn(
+          isLoading ? "opacity-0" : "opacity-100",
+          "h-full w-full",
+          className,
+        )}
         src={imageSrc}
         alt={alt}
         {...rest}

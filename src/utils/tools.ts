@@ -1,16 +1,16 @@
-import logo from '../assets/react.svg';
+import logo from "../assets/react.svg";
 
 export const defaultImg = logo;
 
 /**
  * 服务器地址
  */
-export const serverUrl = 'http://localhost:3006';
+export const serverUrl = "http://localhost:3006";
 
 /**
  * 文件上传接口
  */
-export const uploadActionUrl = serverUrl + '/common/upload';
+export const uploadActionUrl = `${serverUrl}/common/upload`;
 
 /**
  * 设置token
@@ -18,19 +18,19 @@ export const uploadActionUrl = serverUrl + '/common/upload';
  * @returns
  */
 export const setToken = (token: string) =>
-	sessionStorage.setItem('token', token);
+  sessionStorage.setItem("token", token);
 
 /**
  * 获取token
  * @returns
  */
-export const getToken = () => sessionStorage.getItem('token');
+export const getToken = () => sessionStorage.getItem("token");
 
 /**
  * 清除token
  * @returns
  */
-export const clearToken = () => sessionStorage.removeItem('token')
+export const clearToken = () => sessionStorage.removeItem("token");
 
 /**
  * 图片处理
@@ -38,9 +38,9 @@ export const clearToken = () => sessionStorage.removeItem('token')
  * @returns
  */
 export const dalImg = (img: string) => {
-	if (img) {
-		if (img.startsWith('http')) return img;
-		return serverUrl + img;
-	}
-	return defaultImg;
+  if (img) {
+    if (img.startsWith("http")) return img;
+    return serverUrl + img;
+  }
+  return defaultImg;
 };

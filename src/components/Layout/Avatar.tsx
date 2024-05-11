@@ -1,6 +1,6 @@
-import React from "react";
+import { Avatar as AntdAvatar, Dropdown, type MenuProps } from "antd";
+import type React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Avatar as AntdAvatar, Dropdown, MenuProps } from "antd";
 import { clearToken } from "../../utils/tools";
 
 interface Props {
@@ -14,10 +14,7 @@ const Avatar: React.FC<Props> = ({ avatarSrc }) => {
     {
       key: "info",
       label: (
-        <Link
-          to=""
-          replace
-        >
+        <Link to="" replace>
           个人信息
         </Link>
       ),
@@ -40,16 +37,8 @@ const Avatar: React.FC<Props> = ({ avatarSrc }) => {
     },
   ];
   return (
-    <Dropdown
-      menu={{ items }}
-      placement="bottomRight"
-      arrow
-    >
-      <AntdAvatar
-        className="min-w-fit m-auto"
-        src={avatarSrc}
-        size={32}
-      />
+    <Dropdown menu={{ items }} placement="bottomRight" arrow>
+      <AntdAvatar className="min-w-fit m-auto" src={avatarSrc} size={32} />
     </Dropdown>
   );
 };

@@ -1,14 +1,14 @@
 import { useRef } from "react";
 
 interface IUseDebounce {
-  callback: Function;
+  callback: (...args: unknown[]) => unknown;
   delay?: number;
 }
 
 export const useDebounce = ({ callback, delay = 300 }: IUseDebounce) => {
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  const debouncedCallback = (...args: any[]) => {
+  const debouncedCallback = (...args: unknown[]) => {
     if (timer.current) {
       clearTimeout(timer.current);
     }

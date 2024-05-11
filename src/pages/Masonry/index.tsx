@@ -1,8 +1,8 @@
-import { FC, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { useInfiniteScroll } from "ahooks";
 import { Card } from "antd";
+import axios from "axios";
+import { type FC, useEffect, useRef } from "react";
 
-import { useThrottle } from "@/hooks/useThrottle";
 import SImage from "@/components/Image";
 
 interface IItem {
@@ -13,141 +13,143 @@ interface IItem {
   width: number;
 }
 
+type ApiItem = {
+  title: string;
+  regular_url: string;
+  height: number;
+  width: number;
+};
+
+type Result = {
+  total: number;
+  list: IItem[];
+};
+
+const getData = async (
+  offset: number,
+  limit: number,
+  listLength: number,
+): Promise<Result> => {
+  const res = await axios.get("https://www.vilipix.com/api/v1/picture/public", {
+    params: {
+      limit,
+      offset,
+      sort: "hot",
+    },
+  });
+  const data = res.data.data;
+  const list: IItem[] = data.rows.map((item: ApiItem, idx: number) => ({
+    id: idx + listLength,
+    title: item.title,
+    url: item.regular_url,
+    height: item.height,
+    width: item.width,
+  }));
+
+  return {
+    total: data.count,
+    list,
+  };
+};
+
 const Masonry: FC = () => {
-  const containerRef = useRef(null);
-
-  const [list, setList] = useState<IItem[]>([]);
-  const [colData, setColData] = useState<IItem[][]>([]); // 列数据
-  const [heights, setHeights] = useState<number[]>([]); // 每列高度
-  const [page, setPage] = useState(1); // 页码
-  const [loading, setLoading] = useState(false); // 加载状态
-
   const columns = 4; // 列数
-  const limit = 20; // 每页条数
+  const limit = 10; // 每页条数
 
   const gapX = 20; // 水平间距
   const gapY = 20; // 垂直间距
 
-  const handleScroll = useThrottle({
-    callback: () => {
-      if (!containerRef.current) return;
-      // 监听滚动事件，到达底部时加载更多
-      const container = containerRef.current as HTMLDivElement;
-      const containerHeight = container.clientHeight;
-      const scrollTop = document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight;
-      if (scrollHeight - scrollTop - containerHeight < 20) {
-        setPage((page) => page + 1);
-      }
-    },
-    delay: 1000,
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const getData = useThrottle({
-    callback: async () => {
-      axios
-        .get("https://www.vilipix.com/api/v1/picture/public", {
-          params: {
-            page,
-            limit,
-            offset: (Number(page) - 1) * Number(limit),
-            sort: "hot",
-            type: 0,
-          },
-        })
-        .then((res) => {
-          setList(
-            list.concat(
-              res.data.data.rows.map((item: any, idx: number) => {
-                return {
-                  id: idx + list.length,
-                  title: item.title,
-                  url: item.regular_url,
-                  height: item.height,
-                  width: item.width,
-                };
-              })
-            )
-          );
-        });
-    },
-    delay: 1000,
-  });
+  const containerWidth = containerRef.current?.clientWidth || 0;
+  const colWidth = (containerWidth - gapX * (columns - 1)) / columns;
 
-  // 初始化
+  const colData = useRef<IItem[][]>(new Array(columns).fill([]));
+  const heights = useRef<number[]>(new Array(columns).fill(0));
+
+  const { loading, loadingMore, noMore } = useInfiniteScroll(
+    (d: Result | undefined) => {
+      const offset = d?.list?.length || 0;
+      return getData(offset, limit, offset);
+    },
+    {
+      target: () => document,
+      isNoMore: (d) => {
+        const total = d?.total || 0;
+        const listLength = d?.list?.length || 0;
+        const hasMore = total > listLength;
+        return !hasMore;
+      },
+      onSuccess: (data?: Result | undefined, e?: Error | undefined) => {
+        if (e) {
+          console.error(e);
+        }
+        if (!data) return;
+
+        const currHeights = [...heights.current];
+        const currColData = [...colData.current];
+
+        for (const item of data.list) {
+          const minHeight = Math.min(...currHeights);
+          const idx = currHeights.indexOf(minHeight);
+
+          currColData[idx] = [...currColData[idx], item];
+          const height = colWidth / (item.width / item.height);
+          currHeights[idx] += height;
+        }
+
+        colData.current = currColData;
+        heights.current = currHeights;
+      },
+    },
+  );
+
   useEffect(() => {
-    setColData(new Array(columns).fill([]));
-    setHeights(new Array(columns).fill(0));
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    // 设计 document 滚动到顶部
+    document.documentElement.scrollTop = 0;
   }, []);
 
-  // 更新列数据，追加到最短列
-  useEffect(() => {
-    if (!containerRef.current || !heights.length || !colData.length) return;
-    const container = containerRef.current as HTMLDivElement;
-    const children = Array.from(container.children) as HTMLElement[];
-
-    const colWidth = children[0].clientWidth;
-    const currHeights = [...heights];
-    const currColData = [...colData];
-    const colDataLength = currColData.length * currColData[0].length;
-
-    for (let i = colDataLength; i < list.length; i++) {
-      const minHeight = Math.min(...currHeights);
-      const idx = currHeights.indexOf(minHeight);
-      currColData[idx] = [...currColData[idx], list[i]];
-      const height = colWidth / (list[i].width / list[i].height);
-      currHeights[idx] += height;
-    }
-
-    setColData(currColData);
-    setHeights(currHeights);
-  }, [list.length, containerRef.current]);
-
-  useEffect(() => {
-    getData();
-  }, [page, limit]);
-
   return (
-    <div
-      ref={containerRef}
-      className="masonry min-h-screen mx-auto flex w-full h-full"
-      style={{
-        gap: `${gapX}px`,
-      }}
-    >
-      {colData.map((col, idx) => (
-        <div
-          key={idx}
-          className="masonry-col flex flex-col w-full"
-          style={{
-            gap: `${gapY}px`,
-          }}
-        >
-          {col.map((item, index) => (
-            <Card
-              key={index}
-              hoverable
-              loading={loading}
-              cover={
-                <SImage
-                  className="border w-full h-full"
-                  src={item.url}
-                  onLoad={() => {
-                    setLoading(false);
-                  }}
-                />
-              }
-            >
-              <span className="line-clamp-2 text-base">{item.id + " " + item.title}</span>
-            </Card>
-          ))}
-        </div>
-      ))}
+    <div className="w-full h-full">
+      <div
+        ref={containerRef}
+        className="masonry min-h-screen mx-auto flex w-full h-full pb-20"
+        style={{
+          gap: `${gapX}px`,
+        }}
+      >
+        {colData.current.map((col, idx) => (
+          <div
+            key={col[0]?.id || idx}
+            className="masonry-col flex flex-col w-full"
+            style={{
+              gap: `${gapY}px`,
+            }}
+          >
+            {col.map((item) => (
+              <Card
+                key={item.id}
+                cover={
+                  <SImage className="border w-full h-full" src={item.url} />
+                }
+              >
+                <span className="line-clamp-1 text-base">
+                  {`${item.id} ${item.title}`}
+                </span>
+              </Card>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div className="h-20 relative bottom-20 flex justify-center items-center">
+        {loading || loadingMore ? (
+          <span className="text-center text-base">加载中...</span>
+        ) : null}
+        {noMore ? (
+          <span className="text-center text-base">没有更多了</span>
+        ) : null}
+      </div>
     </div>
   );
 };

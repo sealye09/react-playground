@@ -1,19 +1,19 @@
 import {
   DashboardOutlined,
-  HeartOutlined,
-  FileOutlined,
-  UserOutlined,
-  MessageOutlined,
   FallOutlined,
+  FileOutlined,
+  HeartOutlined,
+  MessageOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
-import VirtualListPage from "@/pages/VirtualList";
-import Masonry from "@/pages/Masonry";
 import ArticleCatgory from "@/pages/ArticleCatgory";
 import ArticleInfo from "@/pages/ArticleInfo";
-import MedicineCatgory from "@/pages/MedicineCatgory";
+import Masonry from "@/pages/Masonry";
+import MedicineCategory from "@/pages/MedicineCategory";
 import MedicineInfo from "@/pages/MedicineInfo";
 import MessagePage from "@/pages/Message";
+import VirtualListPage from "@/pages/VirtualList";
 import WaterFallPage from "@/pages/WaterFallPage";
 
 export type RouteType = {
@@ -39,7 +39,7 @@ const routes: RouteType[] = [
       {
         label: "药品分类",
         key: "/admin/medicine/category",
-        element: <MedicineCatgory />,
+        element: <MedicineCategory />,
       },
       {
         label: "药品信息",
@@ -97,7 +97,9 @@ function flatMenus(arr: RouteType[]) {
       if ("children" in curr) {
         const children = curr.children;
         if (children) {
-          Array.isArray(children) ? stack.push(...children) : stack.push(children);
+          Array.isArray(children)
+            ? stack.push(...children)
+            : stack.push(children);
         }
       }
       res.unshift(curr);

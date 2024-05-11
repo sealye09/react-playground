@@ -1,8 +1,6 @@
-import { FC } from 'react';
+import type { FC } from "react";
 
-interface Props {}
-
-const MedicineInfo: FC<Props> = () => {
+const MedicineInfo: FC = () => {
   return <div>MedicineInfo</div>;
 };
 

@@ -1,10 +1,10 @@
-import Layout from "./components/Layout";
 import { Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
 
 import { getMenus, getRoutes } from "@/router/index";
-import { getToken } from "./utils/tools";
-import Login from "./pages/Login";
 import { ToastProvider } from "./components/Toast/ToastProvider";
+import Login from "./pages/Login";
+import { getToken } from "./utils/tools";
 
 function App() {
   return (
@@ -27,24 +27,15 @@ function App() {
               element={item?.element}
             />
           ))}
-          <Route
-            path="*"
-            element={<h2>404</h2>}
-          />
+          <Route path="*" element={<h2>404</h2>} />
         </Route>
 
         <Route
           path="/admin/login"
           element={getToken() ? <Navigate to="/admin/dashboard" /> : <Login />}
         />
-        <Route
-          path="/"
-          element={<Navigate to="/admin/dashboard" />}
-        />
-        <Route
-          path="*"
-          element={<h2>404</h2>}
-        />
+        <Route path="/" element={<Navigate to="/admin/dashboard" />} />
+        <Route path="*" element={<h2>404</h2>} />
       </Routes>
     </ToastProvider>
   );

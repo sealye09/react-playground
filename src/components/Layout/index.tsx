@@ -1,12 +1,12 @@
-import { FC, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Breadcrumb, Button, Layout as AntdLayout, Menu, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Layout as AntdLayout, Breadcrumb, Button, Menu, theme } from "antd";
+import { type FC, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import { RouteType } from "@/router/index";
-import Avatar from "./Avatar";
-import logo from "../../assets/react.svg";
+import type { RouteType } from "@/router/index";
 import styles from "@/styles/layout.module.scss";
+import logo from "../../assets/react.svg";
+import Avatar from "./Avatar";
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 

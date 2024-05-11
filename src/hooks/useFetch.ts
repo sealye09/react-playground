@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface IUseFetch {
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -9,7 +9,7 @@ interface IUseFetch {
 }
 
 export const useFetch = ({ method, url, params, body }: IUseFetch) => {
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<unknown>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const useFetch = ({ method, url, params, body }: IUseFetch) => {
     return () => {
       controller.abort();
     };
-  }, [url]);
+  }, [url, body, method, params]);
 
   return {
     data,

@@ -1,6 +1,8 @@
 import { useCallback, useLayoutEffect, useRef } from "react";
 
-export const useEvent = <T extends Event = Event>(handler: (event: T) => void) => {
+export const useEvent = <T extends Event = Event>(
+  handler: (event: T) => void,
+) => {
   const savedHandler = useRef<typeof handler>();
 
   useLayoutEffect(() => {

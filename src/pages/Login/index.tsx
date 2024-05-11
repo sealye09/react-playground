@@ -1,32 +1,14 @@
-import { FC } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, message } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Form, Input, message } from "antd";
+import type { FC } from "react";
 
 import styles from "@/styles/login.module.scss";
 
-interface Props {}
+const Login: FC = () => {
+  const [_messageApi, contextHolder] = message.useMessage();
 
-const Login: FC<Props> = () => {
-  const [messageApi, contextHolder] = message.useMessage();
-  const navigate = useNavigate();
-
-  const onFinish = async (values: any) => {
+  const onFinish = async () => {
     console.log("login...");
-    // const res = await loginAPI({ ...values });
-    // if (res.success) {
-    //   setToken(res.data);
-    //   messageApi.open({
-    //     type: "success",
-    //     content: "登入成功",
-    //   });
-    //   navigate("/admin/dashboard");
-    // } else {
-    //   messageApi.open({
-    //     type: "error",
-    //     content: `${res.errorMessage}`,
-    //   });
-    // }
   };
 
   return (
@@ -67,10 +49,7 @@ const Login: FC<Props> = () => {
           >
             登入
           </Button>
-          <a
-            style={{ padding: "0 16px" }}
-            href=""
-          >
+          <a style={{ padding: "0 16px" }} href="/">
             去注册
           </a>
         </Form.Item>

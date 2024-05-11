@@ -1,11 +1,10 @@
-import { useContext } from "react";
 import { Icon } from "@iconify/react";
-import { VariantProps, cva } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
+import { useContext } from "react";
 
 import { cn } from "@/utils/cn";
-
 import ToastIcon from "./ToastIcon";
-import { ToastType, ToastContext, ToastAction } from "./ToastProvider";
+import { ToastAction, ToastContext, type ToastType } from "./ToastProvider";
 
 const bgColorVariant = cva(
   ["flex justify-between gap-2 px-4 py-2 rounded-md shadow-lg w-fit mx-auto"],
@@ -21,11 +20,15 @@ const bgColorVariant = cva(
     defaultVariants: {
       intent: "info",
     },
-  }
+  },
 );
 
 const hoverBgColorVariant = cva(
-  ["w-5 h-5 p-1 rounded-md", "flex justify-center items-center", "translate-x-4 -translate-y-1.5"],
+  [
+    "w-5 h-5 p-1 rounded-md",
+    "flex justify-center items-center",
+    "translate-x-4 -translate-y-1.5",
+  ],
   {
     variants: {
       intent: {
@@ -38,7 +41,7 @@ const hoverBgColorVariant = cva(
     defaultVariants: {
       intent: "info",
     },
-  }
+  },
 );
 
 const textColorVariant = cva(["text-sm"], {
@@ -65,7 +68,7 @@ type ToastProps = {
 const Toast = ({ id, message, type }: ToastProps) => {
   const { dispatch } = useContext(ToastContext);
 
-  const onDismiss = (id: string) => {
+  const onDismiss = () => {
     dispatch({
       type: ToastAction.DELETE_TOAST,
       payload: id,
@@ -80,9 +83,10 @@ const Toast = ({ id, message, type }: ToastProps) => {
       <div className="body flex flex-1 flex-col mx-4">
         <span className={textColorVariant({ intent: type })}>{message}</span>
       </div>
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         className={hoverBgColorVariant({ intent: type })}
-        onClick={() => onDismiss(id)}
+        onClick={onDismiss}
       >
         <Icon icon="heroicons:x-mark" />
       </div>

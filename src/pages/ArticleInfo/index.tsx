@@ -1,8 +1,6 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-interface Props {}
-
-const ArticleInfo: FC<Props> = (props: Props) => {
+const ArticleInfo: FC = () => {
   return <div>ArticleInfo</div>;
 };
 

@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { ToastType } from "./ToastProvider";
+import type { ToastType } from "./ToastProvider";
 
 const ToastIcon = ({ type }: { type: ToastType }) => {
   switch (type) {
@@ -33,10 +33,7 @@ const ToastIcon = ({ type }: { type: ToastType }) => {
       );
     default:
       return (
-        <Icon
-          icon="heroicons:information-circle"
-          className="w-full h-full"
-        />
+        <Icon icon="heroicons:information-circle" className="w-full h-full" />
       );
   }
 };
